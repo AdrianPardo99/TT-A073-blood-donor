@@ -30,6 +30,7 @@ class Center(BaseModel):
 class CenterCapacity(BaseModel):
     center = models.ForeignKey(
         Center,
+        on_delete=models.PROTECT,
         verbose_name=pgettext_lazy("Center Capacity field", "capacity"),
         related_name="blood_units",
     )

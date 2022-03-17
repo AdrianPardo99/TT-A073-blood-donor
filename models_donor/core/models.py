@@ -1,7 +1,3 @@
-from __future__ import unicode_literals
-from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible, smart_text
-from django.utils.translation import pgettext_lazy
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
