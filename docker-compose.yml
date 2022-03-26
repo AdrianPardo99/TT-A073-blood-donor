@@ -24,7 +24,7 @@ services:
 
   platelets_api:
     build: ./platelets_api
-    command: uvicorn platelets_api.main:app --reload --host 0.0.0.0
+    command: bash -c "cd platelets_api && uvicorn main:app --reload --host 0.0.0.0"
     volumes:
       - .:/code
     env_file: ./platelets_api/.env
