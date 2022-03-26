@@ -21,3 +21,15 @@ services:
       - "5434:5432"
     environment:
       POSTGRES_PASSWORD: postgres
+
+  platelets_api:
+    build: ./platelets_api
+    command: uvicorn platelets_api.main:app --reload --host 0.0.0.0
+    volumes:
+      - .:/code
+    env_file: ./platelets_api/.env
+    ports:
+      - "8088:8000"
+    stdin_open: true
+    tty: true
+    restart: on-failure

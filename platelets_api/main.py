@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
-from utils.models import Petition
-from utils.function import check_priority, check_distance, check_time
+from .utils.models import Petition
+from .utils.function import check_priority, check_distance, check_time
 
 app = FastAPI(title="Platelets", version="0.1.0")
 app.add_middleware(
