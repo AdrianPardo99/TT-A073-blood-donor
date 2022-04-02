@@ -33,3 +33,15 @@ services:
     stdin_open: true
     tty: true
     restart: on-failure
+
+  plasma_api:
+    build: ./plasma_api
+    command: bash -c "cd plasma_api && uvicorn main:app --reload --host 0.0.0.0"
+    volumes:
+      - .:/code
+    env_file: ./platelets_api/.env
+    ports:
+      - "8089:8000"
+    stdin_open: true
+    tty: true
+    restart: on-failure
