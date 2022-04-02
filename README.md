@@ -30,3 +30,8 @@ For use the project you only need to apply migrations of the project, you need t
 
 If you have one or many databases, you only need to run the next command for restoring the data:
 `docker-compose exec unit_blood pg_restore --verbose --clean --no-acl --no-owner -h db -U postgres -d postgres <file.dump>`
+
+## Backup Data Base
+
+When you want to backup the database, you only need to run:
+`docker-compose exec unit_blood pg_dumpall -c -h db -U postgres> latest.dump`
