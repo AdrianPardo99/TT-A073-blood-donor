@@ -1,0 +1,1416 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.15 (Debian 11.15-1.pgdg90+1)
+-- Dumped by pg_dump version 13.5 (Debian 13.5-0+deb11u1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: postgres; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE postgres WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.utf8';
+
+
+ALTER DATABASE postgres OWNER TO postgres;
+
+\connect postgres
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE postgres IS 'default administrative connection database';
+
+
+SET default_tablespace = '';
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO postgres;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO postgres;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO postgres;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO postgres;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO postgres;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO postgres;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- Name: blood_center_center; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blood_center_center (
+    id integer NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    deleted_at timestamp with time zone,
+    name character varying(200) NOT NULL,
+    address character varying(300) NOT NULL,
+    city character varying(100) NOT NULL,
+    latitude numeric(18,16) NOT NULL,
+    longitude numeric(18,16) NOT NULL
+);
+
+
+ALTER TABLE public.blood_center_center OWNER TO postgres;
+
+--
+-- Name: blood_center_center_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blood_center_center_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blood_center_center_id_seq OWNER TO postgres;
+
+--
+-- Name: blood_center_center_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blood_center_center_id_seq OWNED BY public.blood_center_center.id;
+
+
+--
+-- Name: blood_center_centercapacity; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blood_center_centercapacity (
+    id integer NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    deleted_at timestamp with time zone,
+    min_qty integer NOT NULL,
+    max_qty integer NOT NULL,
+    center_id integer NOT NULL,
+    type character varying(55) NOT NULL,
+    CONSTRAINT blood_center_centercapacity_max_qty_check CHECK ((max_qty >= 0)),
+    CONSTRAINT blood_center_centercapacity_min_qty_check CHECK ((min_qty >= 0))
+);
+
+
+ALTER TABLE public.blood_center_centercapacity OWNER TO postgres;
+
+--
+-- Name: blood_center_centercapacity_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blood_center_centercapacity_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blood_center_centercapacity_id_seq OWNER TO postgres;
+
+--
+-- Name: blood_center_centercapacity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blood_center_centercapacity_id_seq OWNED BY public.blood_center_centercapacity.id;
+
+
+--
+-- Name: blood_center_centertransfer; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blood_center_centertransfer (
+    id integer NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    deleted_at timestamp with time zone,
+    status character varying(25) NOT NULL,
+    deadline timestamp with time zone NOT NULL,
+    type_deadline character varying(25) NOT NULL,
+    name character varying(450) NOT NULL,
+    comment character varying(1500),
+    destination_id integer NOT NULL,
+    origin_id integer NOT NULL
+);
+
+
+ALTER TABLE public.blood_center_centertransfer OWNER TO postgres;
+
+--
+-- Name: blood_center_centertransfer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blood_center_centertransfer_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blood_center_centertransfer_id_seq OWNER TO postgres;
+
+--
+-- Name: blood_center_centertransfer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blood_center_centertransfer_id_seq OWNED BY public.blood_center_centertransfer.id;
+
+
+--
+-- Name: blood_center_centertransferunit; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blood_center_centertransferunit (
+    id integer NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    deleted_at timestamp with time zone,
+    transfer_id integer NOT NULL,
+    unit_id integer NOT NULL
+);
+
+
+ALTER TABLE public.blood_center_centertransferunit OWNER TO postgres;
+
+--
+-- Name: blood_center_centertransferunit_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blood_center_centertransferunit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blood_center_centertransferunit_id_seq OWNER TO postgres;
+
+--
+-- Name: blood_center_centertransferunit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blood_center_centertransferunit_id_seq OWNED BY public.blood_center_centertransferunit.id;
+
+
+--
+-- Name: blood_center_unit; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blood_center_unit (
+    id integer NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    deleted_at timestamp with time zone,
+    type character varying(55) NOT NULL,
+    blood_type character varying(4) NOT NULL,
+    expired_at timestamp with time zone NOT NULL,
+    is_available boolean NOT NULL,
+    is_expired boolean NOT NULL,
+    can_transfer boolean NOT NULL,
+    center_id integer NOT NULL
+);
+
+
+ALTER TABLE public.blood_center_unit OWNER TO postgres;
+
+--
+-- Name: blood_center_unit_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blood_center_unit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blood_center_unit_id_seq OWNER TO postgres;
+
+--
+-- Name: blood_center_unit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blood_center_unit_id_seq OWNED BY public.blood_center_unit.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id uuid NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO postgres;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO postgres;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO postgres;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO postgres;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO postgres;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO postgres;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO postgres;
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."user" (
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    id uuid NOT NULL,
+    email character varying(254) NOT NULL,
+    first_name character varying(256) NOT NULL,
+    last_name character varying(256) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    language_code character varying(10) NOT NULL,
+    blocked_at timestamp with time zone,
+    center_id integer
+);
+
+
+ALTER TABLE public."user" OWNER TO postgres;
+
+--
+-- Name: user_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_groups (
+    id integer NOT NULL,
+    user_id uuid NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.user_groups OWNER TO postgres;
+
+--
+-- Name: user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_groups_id_seq OWNER TO postgres;
+
+--
+-- Name: user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_groups_id_seq OWNED BY public.user_groups.id;
+
+
+--
+-- Name: user_user_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_user_permissions (
+    id integer NOT NULL,
+    user_id uuid NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.user_user_permissions OWNER TO postgres;
+
+--
+-- Name: user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_user_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_user_permissions_id_seq OWNER TO postgres;
+
+--
+-- Name: user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_user_permissions_id_seq OWNED BY public.user_user_permissions.id;
+
+
+--
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- Name: blood_center_center id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_center ALTER COLUMN id SET DEFAULT nextval('public.blood_center_center_id_seq'::regclass);
+
+
+--
+-- Name: blood_center_centercapacity id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centercapacity ALTER COLUMN id SET DEFAULT nextval('public.blood_center_centercapacity_id_seq'::regclass);
+
+
+--
+-- Name: blood_center_centertransfer id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransfer ALTER COLUMN id SET DEFAULT nextval('public.blood_center_centertransfer_id_seq'::regclass);
+
+
+--
+-- Name: blood_center_centertransferunit id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransferunit ALTER COLUMN id SET DEFAULT nextval('public.blood_center_centertransferunit_id_seq'::regclass);
+
+
+--
+-- Name: blood_center_unit id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_unit ALTER COLUMN id SET DEFAULT nextval('public.blood_center_unit_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: user_groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_groups ALTER COLUMN id SET DEFAULT nextval('public.user_groups_id_seq'::regclass);
+
+
+--
+-- Name: user_user_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.user_user_permissions_id_seq'::regclass);
+
+
+--
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can view log entry	1	view_logentry
+5	Can add permission	2	add_permission
+6	Can change permission	2	change_permission
+7	Can delete permission	2	delete_permission
+8	Can view permission	2	view_permission
+9	Can add group	3	add_group
+10	Can change group	3	change_group
+11	Can delete group	3	delete_group
+12	Can view group	3	view_group
+13	Can add content type	4	add_contenttype
+14	Can change content type	4	change_contenttype
+15	Can delete content type	4	delete_contenttype
+16	Can view content type	4	view_contenttype
+17	Can add session	5	add_session
+18	Can change session	5	change_session
+19	Can delete session	5	delete_session
+20	Can view session	5	view_session
+21	Can add user	6	add_user
+22	Can change user	6	change_user
+23	Can delete user	6	delete_user
+24	Can view user	6	view_user
+25	Can add center	7	add_center
+26	Can change center	7	change_center
+27	Can delete center	7	delete_center
+28	Can view center	7	view_center
+29	Can add center capacity	8	add_centercapacity
+30	Can change center capacity	8	change_centercapacity
+31	Can delete center capacity	8	delete_centercapacity
+32	Can view center capacity	8	view_centercapacity
+33	Can add center transfer	9	add_centertransfer
+34	Can change center transfer	9	change_centertransfer
+35	Can delete center transfer	9	delete_centertransfer
+36	Can view center transfer	9	view_centertransfer
+37	Can add unit	10	add_unit
+38	Can change unit	10	change_unit
+39	Can delete unit	10	delete_unit
+40	Can view unit	10	view_unit
+41	Can add center transfer unit	11	add_centertransferunit
+42	Can change center transfer unit	11	change_centertransferunit
+43	Can delete center transfer unit	11	delete_centertransferunit
+44	Can view center transfer unit	11	view_centertransferunit
+\.
+
+
+--
+-- Data for Name: blood_center_center; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blood_center_center (id, created_at, updated_at, deleted_at, name, address, city, latitude, longitude) FROM stdin;
+1	2022-03-28 14:59:45.416055+00	2022-03-28 14:59:45.416087+00	\N	Banco de sangre la Raza	La Raza, Azcapotzalco, 02990 Mexico City, CDMX	CDMX	19.4649535993824150	-99.1445544758517600
+\.
+
+
+--
+-- Data for Name: blood_center_centercapacity; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blood_center_centercapacity (id, created_at, updated_at, deleted_at, min_qty, max_qty, center_id, type) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blood_center_centertransfer; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blood_center_centertransfer (id, created_at, updated_at, deleted_at, status, deadline, type_deadline, name, comment, destination_id, origin_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blood_center_centertransferunit; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blood_center_centertransferunit (id, created_at, updated_at, deleted_at, transfer_id, unit_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blood_center_unit; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blood_center_unit (id, created_at, updated_at, deleted_at, type, blood_type, expired_at, is_available, is_expired, can_transfer, center_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2022-03-28 14:59:45.472164+00	1	Center object (1)	1	[{"added": {}}]	7	99bbb4da-0072-4231-9787-f9e13acf025a
+2	2022-03-28 15:03:30.435214+00	99bbb4da-0072-4231-9787-f9e13acf025a	gozapaadr@gmail.com	2	[{"changed": {"fields": ["Organization"]}}]	6	99bbb4da-0072-4231-9787-f9e13acf025a
+\.
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	contenttypes	contenttype
+5	sessions	session
+6	application_user	user
+7	blood_center	center
+8	blood_center	centercapacity
+9	blood_center	centertransfer
+10	blood_center	unit
+11	blood_center	centertransferunit
+\.
+
+
+--
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2022-03-17 04:40:45.611435+00
+2	blood_center	0001_initial	2022-03-17 04:40:45.715489+00
+3	blood_center	0002_centercapacity	2022-03-17 04:40:45.818679+00
+4	blood_center	0003_alter_centercapacity_center	2022-03-17 04:40:45.839561+00
+5	contenttypes	0002_remove_content_type_name	2022-03-17 04:40:45.861085+00
+6	auth	0001_initial	2022-03-17 04:40:46.361015+00
+7	auth	0002_alter_permission_name_max_length	2022-03-17 04:40:46.382521+00
+8	auth	0003_alter_user_email_max_length	2022-03-17 04:40:46.400443+00
+9	auth	0004_alter_user_username_opts	2022-03-17 04:40:46.419253+00
+10	auth	0005_alter_user_last_login_null	2022-03-17 04:40:46.444785+00
+11	auth	0006_require_contenttypes_0002	2022-03-17 04:40:46.458747+00
+12	auth	0007_alter_validators_add_error_messages	2022-03-17 04:40:46.478154+00
+13	auth	0008_alter_user_username_max_length	2022-03-17 04:40:46.495475+00
+14	auth	0009_alter_user_last_name_max_length	2022-03-17 04:40:46.513488+00
+15	auth	0010_alter_group_name_max_length	2022-03-17 04:40:46.531463+00
+16	auth	0011_update_proxy_permissions	2022-03-17 04:40:46.548929+00
+17	auth	0012_alter_user_first_name_max_length	2022-03-17 04:40:46.568044+00
+18	application_user	0001_initial	2022-03-17 04:40:48.028511+00
+19	admin	0001_initial	2022-03-17 04:40:48.329165+00
+20	admin	0002_logentry_remove_auto_add	2022-03-17 04:40:48.355784+00
+21	admin	0003_logentry_add_action_flag_choices	2022-03-17 04:40:48.383041+00
+22	sessions	0001_initial	2022-03-17 04:40:48.674979+00
+23	application_user	0002_alter_user_center	2022-03-17 04:50:35.265268+00
+24	blood_center	0004_auto_20220328_1452	2022-03-28 14:53:08.358233+00
+25	blood_center	0005_auto_20220328_1459	2022-03-28 14:59:31.694691+00
+\.
+
+
+--
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+ro2kndipitev6dlsr7ijatcclodxjopr	.eJxVjDsOwjAMQO-SmUT5NAlmZOcMle04tIBaqZ8JcXdaqQPM7_NWLa5L166zTG1f1EUBEFFTUFubvW58cBryOesK4gJytT6iOv1mhPyUYW_LA4f7aHgclqknsyvmoLO5jUVe18P9G3Q4d1vNXIvnBME7chmCYOSYIJacOfhzDMmKRe-iUEo2A29rj1UkARYMpD5f0qdBaw:1nUi61:ufx8YuLbcU_WBphpA768HZSb_9kVs4eYXI4umjurW4I	2022-03-31 04:50:45.553268+00
+fndvpa0y8pcehlvkpyoh5a37jxmr0ufg	.eJxVjDsOwjAMQO-SmUT5NAlmZOcMle04tIBaqZ8JcXdaqQPM7_NWLa5L166zTG1f1EUBEFFTUFubvW58cBryOesK4gJytT6iOv1mhPyUYW_LA4f7aHgclqknsyvmoLO5jUVe18P9G3Q4d1vNXIvnBME7chmCYOSYIJacOfhzDMmKRe-iUEo2A29rj1UkARYMpD5f0qdBaw:1nYqmB:ukwTMelt6fIediJzmC7RUstdgBd2H-O17QFq3SPN_eQ	2022-04-11 14:55:23.450809+00
+94uwz5cfs7cg4n64w9e8uxa913a6efa1	.eJxVjDsOwjAMQO-SmUT5NAlmZOcMle04tIBaqZ8JcXdaqQPM7_NWLa5L166zTG1f1EUBEFFTUFubvW58cBryOesK4gJytT6iOv1mhPyUYW_LA4f7aHgclqknsyvmoLO5jUVe18P9G3Q4d1vNXIvnBME7chmCYOSYIJacOfhzDMmKRe-iUEo2A29rj1UkARYMpD5f0qdBaw:1nYzr5:mrgsAG447cpcDdxSxf_O9_n0_hKi9VADoFc8UZ1h7iQ	2022-04-12 00:37:03.195015+00
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."user" (password, last_login, is_superuser, id, email, first_name, last_name, is_staff, is_active, date_joined, language_code, blocked_at, center_id) FROM stdin;
+pbkdf2_sha256$260000$wo7fELjArUWN0rv2Znl2SE$pkOE6LuPKdk7XqW6GlWBOGKM6cIZVkwFwZmne/WZLMs=	2022-03-29 00:37:03.054835+00	t	99bbb4da-0072-4231-9787-f9e13acf025a	gozapaadr@gmail.com	Adrian	González	t	t	2022-03-17 04:48:50.75676+00	es	\N	1
+\.
+
+
+--
+-- Data for Name: user_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_user_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 44, true);
+
+
+--
+-- Name: blood_center_center_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blood_center_center_id_seq', 1, true);
+
+
+--
+-- Name: blood_center_centercapacity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blood_center_centercapacity_id_seq', 1, false);
+
+
+--
+-- Name: blood_center_centertransfer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blood_center_centertransfer_id_seq', 1, false);
+
+
+--
+-- Name: blood_center_centertransferunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blood_center_centertransferunit_id_seq', 1, false);
+
+
+--
+-- Name: blood_center_unit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blood_center_unit_id_seq', 1, false);
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 2, true);
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 11, true);
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 25, true);
+
+
+--
+-- Name: user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_groups_id_seq', 1, false);
+
+
+--
+-- Name: user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blood_center_center blood_center_center_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_center
+    ADD CONSTRAINT blood_center_center_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blood_center_centercapacity blood_center_centercapacity_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centercapacity
+    ADD CONSTRAINT blood_center_centercapacity_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blood_center_centertransfer blood_center_centertransfer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransfer
+    ADD CONSTRAINT blood_center_centertransfer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blood_center_centertransferunit blood_center_centertransferunit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransferunit
+    ADD CONSTRAINT blood_center_centertransferunit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blood_center_unit blood_center_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_unit
+    ADD CONSTRAINT blood_center_unit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_email_key UNIQUE (email);
+
+
+--
+-- Name: user_groups user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_groups
+    ADD CONSTRAINT user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_groups user_groups_user_id_group_id_40beef00_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_groups
+    ADD CONSTRAINT user_groups_user_id_group_id_40beef00_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_user_permissions user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_user_permissions
+    ADD CONSTRAINT user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_user_permissions user_user_permissions_user_id_permission_id_7dc6e2e0_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_user_permissions
+    ADD CONSTRAINT user_user_permissions_user_id_permission_id_7dc6e2e0_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: blood_center_centercapacity_center_id_cf16bc32; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_centercapacity_center_id_cf16bc32 ON public.blood_center_centercapacity USING btree (center_id);
+
+
+--
+-- Name: blood_center_centertransfer_destination_id_9d7c5c32; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_centertransfer_destination_id_9d7c5c32 ON public.blood_center_centertransfer USING btree (destination_id);
+
+
+--
+-- Name: blood_center_centertransfer_origin_id_a3a41abd; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_centertransfer_origin_id_a3a41abd ON public.blood_center_centertransfer USING btree (origin_id);
+
+
+--
+-- Name: blood_center_centertransferunit_transfer_id_0ae17ace; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_centertransferunit_transfer_id_0ae17ace ON public.blood_center_centertransferunit USING btree (transfer_id);
+
+
+--
+-- Name: blood_center_centertransferunit_unit_id_54c52647; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_centertransferunit_unit_id_54c52647 ON public.blood_center_centertransferunit USING btree (unit_id);
+
+
+--
+-- Name: blood_center_unit_center_id_57430c04; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX blood_center_unit_center_id_57430c04 ON public.blood_center_unit USING btree (center_id);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: user_center_id_4126faa2; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_center_id_4126faa2 ON public."user" USING btree (center_id);
+
+
+--
+-- Name: user_email_54dc62b2_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_email_54dc62b2_like ON public."user" USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: user_groups_group_id_b76f8aba; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_groups_group_id_b76f8aba ON public.user_groups USING btree (group_id);
+
+
+--
+-- Name: user_groups_user_id_abaea130; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_groups_user_id_abaea130 ON public.user_groups USING btree (user_id);
+
+
+--
+-- Name: user_user_permissions_permission_id_9deb68a3; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_user_permissions_permission_id_9deb68a3 ON public.user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: user_user_permissions_user_id_ed4a47ea; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX user_user_permissions_user_id_ed4a47ea ON public.user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_centercapacity blood_center_centerc_center_id_cf16bc32_fk_blood_cen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centercapacity
+    ADD CONSTRAINT blood_center_centerc_center_id_cf16bc32_fk_blood_cen FOREIGN KEY (center_id) REFERENCES public.blood_center_center(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_centertransfer blood_center_centert_destination_id_9d7c5c32_fk_blood_cen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransfer
+    ADD CONSTRAINT blood_center_centert_destination_id_9d7c5c32_fk_blood_cen FOREIGN KEY (destination_id) REFERENCES public.blood_center_center(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_centertransfer blood_center_centert_origin_id_a3a41abd_fk_blood_cen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransfer
+    ADD CONSTRAINT blood_center_centert_origin_id_a3a41abd_fk_blood_cen FOREIGN KEY (origin_id) REFERENCES public.blood_center_center(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_centertransferunit blood_center_centert_transfer_id_0ae17ace_fk_blood_cen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransferunit
+    ADD CONSTRAINT blood_center_centert_transfer_id_0ae17ace_fk_blood_cen FOREIGN KEY (transfer_id) REFERENCES public.blood_center_centertransfer(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_centertransferunit blood_center_centert_unit_id_54c52647_fk_blood_cen; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_centertransferunit
+    ADD CONSTRAINT blood_center_centert_unit_id_54c52647_fk_blood_cen FOREIGN KEY (unit_id) REFERENCES public.blood_center_unit(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blood_center_unit blood_center_unit_center_id_57430c04_fk_blood_center_center_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blood_center_unit
+    ADD CONSTRAINT blood_center_unit_center_id_57430c04_fk_blood_center_center_id FOREIGN KEY (center_id) REFERENCES public.blood_center_center(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_user_id FOREIGN KEY (user_id) REFERENCES public."user"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: user user_center_id_4126faa2_fk_blood_center_center_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_center_id_4126faa2_fk_blood_center_center_id FOREIGN KEY (center_id) REFERENCES public.blood_center_center(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: user_groups user_groups_group_id_b76f8aba_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_groups
+    ADD CONSTRAINT user_groups_group_id_b76f8aba_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: user_groups user_groups_user_id_abaea130_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_groups
+    ADD CONSTRAINT user_groups_user_id_abaea130_fk_user_id FOREIGN KEY (user_id) REFERENCES public."user"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: user_user_permissions user_user_permission_permission_id_9deb68a3_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_user_permissions
+    ADD CONSTRAINT user_user_permission_permission_id_9deb68a3_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: user_user_permissions user_user_permissions_user_id_ed4a47ea_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_user_permissions
+    ADD CONSTRAINT user_user_permissions_user_id_ed4a47ea_fk_user_id FOREIGN KEY (user_id) REFERENCES public."user"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
