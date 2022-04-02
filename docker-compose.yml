@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  blood_donor:
+  unit_blood:
     build: .
-    command: python models_donor/manage.py runserver 0.0.0.0:8000
+    command: python unit_blood/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     env_file: .env
@@ -39,7 +39,7 @@ services:
     command: bash -c "cd plasma_api && uvicorn main:app --reload --host 0.0.0.0"
     volumes:
       - .:/code
-    env_file: ./platelets_api/.env
+    env_file: ./plasma_api/.env
     ports:
       - "8089:8000"
     stdin_open: true
