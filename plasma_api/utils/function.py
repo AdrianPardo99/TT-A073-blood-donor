@@ -35,7 +35,19 @@ def check_compatibility(receptor: str, donor: str) -> bool:
     return (assing_value(receptor, 0) & assing_value(donor, 1)) != 0
 
 
-def iterate_every_unit(receptor, donors):
+def check_same_blood(receptor: str, donor: str) -> bool:
+    return receptor == donor
+
+
+def iterate_every_unit(receptor, donors, max_weight):
     for donor in donors:
         donor.compatible = check_compatibility(receptor, donor.blood_type)
+        donor.weight = 1 if donor.compatible else max_weight + 1
+        donor.profit = (
+            2
+            if check_same_blood(receptor, donor)
+            else -1
+            if not donor.compatible
+            else 1
+        )
     return donors

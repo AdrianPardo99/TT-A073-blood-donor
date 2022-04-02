@@ -28,5 +28,5 @@ def information_about():
 
 @app.post("/")
 def assing_compatibility(petition: Petition):
-    iterate_every_unit(petition.receptor_type, petition.units)
+    iterate_every_unit(petition.receptor_type, petition.units, petition.max_weight)
     return petition
