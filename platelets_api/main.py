@@ -6,7 +6,10 @@ from mangum import Mangum
 from utils.models import Petition
 from utils.function import check_priority, check_distance, check_time
 
-app = FastAPI(title="Platelets", version="0.1.0")
+app = FastAPI(
+    title=os.environ.get("APP_NAME"),
+    version=os.environ.get("VERSION"),
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,9 +22,9 @@ app.add_middleware(
 @app.get("/")
 def information_about():
     about = {
-        "title": "Platelets",
+        "title": os.environ.get("APP_NAME"),
         "description": "This API is working for measure the distance between two blood banks or blood centers",
-        "version": "0.1.0",
+        "version": os.environ.get("VERSION"),
     }
     return about
 

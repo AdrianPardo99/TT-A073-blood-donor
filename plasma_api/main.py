@@ -4,9 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from utils.models import Petition
-from utils.function import iterate_every_unit, assing_value
+from utils.function import iterate_every_unit
 
-app = FastAPI(title="Plasma", version="0.1.0")
+app = FastAPI(title=os.environ.get("APP_NAME"), version=os.environ.get("VERSION"))
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,9 +19,9 @@ app.add_middleware(
 @app.get("/")
 def information_about():
     about = {
-        "title": "Plasma",
+        "title": os.environ.get("APP_NAME"),
         "description": "This API is working for assign the compatibility between donor and receptor",
-        "version": "0.1.0",
+        "version": os.environ.get("VERSION"),
     }
     return about
 
