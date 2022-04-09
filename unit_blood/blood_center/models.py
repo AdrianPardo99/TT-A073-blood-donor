@@ -1,8 +1,19 @@
 from django.db import models
-from core.models import BaseModel
+from django.core.validators import MinValueValidator
 from django.utils.translation import pgettext_lazy
 
-from . import BloodABOSystem, BloodUnitType, DeadlineType, TransferStatus
+from simple_history.models import HistoricalRecords
+
+from core.models import BaseModel
+
+from . import (
+    BloodABOSystem,
+    BloodUnitType,
+    DeadlineType,
+    TransferStatus,
+    InstitutionType,
+    DonorGender,
+)
 
 # Tabla centro
 class Center(BaseModel):
@@ -25,6 +36,14 @@ class Center(BaseModel):
         max_digits=18,
         decimal_places=16,
     )
+    type = models.CharField(
+        pgettext_lazy("Center field", "type"),
+        max_length=150,
+        choices=InstitutionType.CHOICES,
+        default=InstitutionType.IMSS,
+    )
+
+    history = HistoricalRecords()
 
 
 class CenterCapacity(BaseModel):
@@ -46,6 +65,8 @@ class CenterCapacity(BaseModel):
     max_qty = models.PositiveIntegerField(
         pgettext_lazy("Center Capacity field", "maximum quantity")
     )
+
+    history = HistoricalRecords()
 
 
 class Unit(BaseModel):
@@ -83,6 +104,23 @@ class Unit(BaseModel):
         pgettext_lazy("Unit field", "can transfer"),
         default=True,
     )
+    is_altruist_unit = models.BooleanField(
+        pgettext_lazy("Unit field", "is altruist unit"),
+        default=False,
+    )
+    donor_gender = models.CharField(
+        pgettext_lazy("Unit field", "donor gender"),
+        max_length=10,
+        choices=DonorGender.CHOICES,
+        default=DonorGender.MALE,
+    )
+    donor_age = models.PositiveIntegerField(
+        pgettext_lazy("Unit field", "donor age"),
+        default=18,
+        validators=[MinValueValidator(18)],
+    )
+
+    history = HistoricalRecords()
 
 
 class CenterTransfer(BaseModel):
@@ -123,6 +161,24 @@ class CenterTransfer(BaseModel):
         blank=True,
         null=True,
     )
+    receptor_blood_type = models.CharField(
+        pgettext_lazy("Center transfer field", "receptor blood type"),
+        max_length=4,
+        choices=BloodABOSystem.CHOICES,
+        default=BloodABOSystem.O_PLUS,
+    )
+    unit_type = models.CharField(
+        pgettext_lazy("Center transfer field", "unit type"),
+        max_length=55,
+        choices=BloodUnitType.CHOICES,
+        default=BloodUnitType.ST,
+    )
+    qty = models.PositiveIntegerField(
+        pgettext_lazy("Center Capacity field", "quantity"),
+        default=1,
+    )
+
+    history = HistoricalRecords()
 
 
 class CenterTransferUnit(BaseModel):
@@ -138,3 +194,5 @@ class CenterTransferUnit(BaseModel):
         related_name="transfers",
         on_delete=models.PROTECT,
     )
+
+    history = HistoricalRecords()

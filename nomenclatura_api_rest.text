@@ -1,0 +1,39 @@
+Direcciones para transacciones
+
+/center/:pk <- Nomenclatura inicial
+
+/center/:pk/units/ <- Lista de unidades de sangre [GET]
+/center/:pk/units/ <- Crea una unidad de sangre [POST]
+
+/center/:pk/units/:unit_pk <- Detalle de la unidad de sangre [GET]
+/center/:pk/units/:unit_pk <- Modificación de la unidad de sangre [PATCH]
+/center/:pk/units/:unit_pk <- Baja de la unidad de sangre [DELETE] <- Se agrega un reason de baja para el history
+
+/center/:pk/centers/ <- Lista centros diferentes al origen [GET]
+/center/:pk/centers/:center_pk/ <- Detalle del centro diferente al origen [GET]
+
+/center/:pk/transfers/ <- Lista transferencias hechas [GET] (Se listan todas en todo momento, solo puede ser modificada en CREATED, ARRIVED, VERIFYING, FINISHED)
+
+-- La creación debe tomar en cuenta que se crea la solución desde el lado de las APIs
+/center/:pk/transfers/ <- Crea una transferencia [POST]
+
+/center/:pk/transfers/:transfer_pk/ <- Detalle de la transferencia [GET]
+/center/:pk/transfers/:transfer_pk/ <- Modifica la transferencia [PATCH]
+
+/center/:pk/transfers/:transfer_pk/units/ <- Lista unidades en la transferencia [GET]
+-- Metodo manual de agregar/solicitar unidad
+/center/:pk/transfers/:transfer_pk/units/ <- Agrega unidades a la transferencia [POST]
+
+/center/:pk/transfers/:transfer_pk/units/:unit_pk <- Detalle de la unidad [GET]
+/center/:pk/transfers/:transfer_pk/units/:unit_pk <- Elimina la unidad de la transferencia [DELETE] <- Se agrega un reason de baja para el history
+
+/center/:pk/transfers/:transfer_pk/cancell <- Cancela la transferencia [POST]
+/center/:pk/transfers/:transfer_pk/next_status <- Modifica el status de la transferencia a su siguiente status (Es generico la url puede ser cambiada) (Aquí hay que ver que status entran para cuando se crea la transferencia, y se comienza a recibir la unidad de sangre) [POST]
+
+/center/:pk/petitions/ <- Lista transferencias recibidas y aún sin atender [GET] (Se debe mostrar a partir de los status para confirmación hasta IN_TRANSIT)
+/center/:pk/petitions/:transfer_pk <- Detalle de la petición [GET]
+/center/:pk/petitions/:transfer_pk/next_status <- Modifica status de la transferencia cuando ya se haya preparado las unidades etc [POST]
+
+/center/:pk/petitions/units/ <- Lista unidades que hay que preparar para transferir [GET]
+/center/:pk/petitions/units/:unit_pk <- Detalle de unidad a transferir [GET]
+/center/:pk/petitions/units/:unit_pk <- Elimina unidad a transferir [DELETE] <- Se agrega reason

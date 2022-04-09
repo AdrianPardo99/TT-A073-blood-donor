@@ -47,11 +47,11 @@ class BloodUnitType:
 
 
 class DeadlineType:
-    MAX = 5
-    HIGH_PRIORITY = 4
-    HIGH = 3
-    MEDIUM = 2
-    LOW = 1
+    MAX = "5"
+    HIGH_PRIORITY = "4"
+    HIGH = "3"
+    MEDIUM = "2"
+    LOW = "1"
 
     CHOICES = [
         (LOW, pgettext_lazy("Deadline type", "Low")),
@@ -81,4 +81,62 @@ class TransferStatus:
         (ARRIVED, pgettext_lazy("Transfer status", "Arrived")),
         (VERIFYING, pgettext_lazy("Transfer status", "Verifying")),
         (FINISHED, pgettext_lazy("Transfer status", "Finished")),
+    ]
+
+
+class InstitutionType:
+    IMSS = "imss"
+    ISSSTE = "issste"
+    CNTS = "cnts"  # Centro nacional de la transfusión sanguinea
+    CETS = "cets"  # Centro Estatal de la Transfusión Sanguínea
+    CCINSHAE = "ccinshae"  # Comisión coordinadora de institutos nacionales de salud y hospitales de alta especialidad
+    DIF = "dif"
+    PEMEX = "pemex"
+    SEDENA = "sedena"
+    SEMAR = "semar"
+    PRIVADOS = "privados"
+    UNIVERSITARIOS = "universitarios"
+    CRUZ_ROJA = "cruz_roja"
+
+    CHOICES = [
+        (IMSS, pgettext_lazy("Institution type", "IMSS")),
+        (ISSSTE, pgettext_lazy("Institution type", "ISSSTE")),
+        (
+            CNTS,
+            pgettext_lazy(
+                "Institution type", "CNTS (Centro Nacional de la Transfusión Sanguínea)"
+            ),
+        ),
+        (
+            CETS,
+            pgettext_lazy(
+                "Institution type", "CETS (Centro Estatal de la Transfusión Sanguínea)"
+            ),
+        ),
+        (
+            CCINSHAE,
+            pgettext_lazy(
+                "Institution type",
+                "CCINSHAE (Comisión Coordinadora de Institutos Nacionales de Salud y Hospitales de Alta Especialidad)",
+            ),
+        ),
+        (DIF, pgettext_lazy("Institution type", "DIF")),
+        (PEMEX, pgettext_lazy("Institution type", "PEMEX")),
+        (SEDENA, pgettext_lazy("Institution type", "SEDENA")),
+        (SEMAR, pgettext_lazy("Institution type", "SEMAR")),
+        (PRIVADOS, pgettext_lazy("Institution type", "PRIVADOS")),
+        (UNIVERSITARIOS, pgettext_lazy("Institution type", "UNIVERSITARIOS")),
+        (CRUZ_ROJA, pgettext_lazy("Institution type", "CRUZ_ROJA")),
+    ]
+
+
+class DonorGender:
+    MALE = "m"
+    FEMALE = "f"
+    OTHER = "o"
+
+    CHOICES = [
+        (MALE, pgettext_lazy("Donor gender", "Male")),
+        (FEMALE, pgettext_lazy("Donor gender", "Female")),
+        (OTHER, pgettext_lazy("Donor gender", "Other")),
     ]
