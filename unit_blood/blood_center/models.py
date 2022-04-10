@@ -45,6 +45,11 @@ class Center(BaseModel):
 
     history = HistoricalRecords()
 
+    class Meta:
+        verbose_name = pgettext_lazy("Center model", "Center")
+        verbose_name_plural = pgettext_lazy("Center model", "Centers")
+        db_table = "center"
+
 
 class CenterCapacity(BaseModel):
     center = models.ForeignKey(
@@ -67,6 +72,11 @@ class CenterCapacity(BaseModel):
     )
 
     history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = pgettext_lazy("Center Capacity model", "Center Capacity")
+        verbose_name_plural = pgettext_lazy("Center Capacity model", "Centers Capacity")
+        db_table = "center_capacity"
 
 
 class Unit(BaseModel):
@@ -121,6 +131,11 @@ class Unit(BaseModel):
     )
 
     history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = pgettext_lazy("Unit model", "Unit")
+        verbose_name_plural = pgettext_lazy("Unit model", "Units")
+        db_table = "unit"
 
 
 class CenterTransfer(BaseModel):
@@ -180,6 +195,13 @@ class CenterTransfer(BaseModel):
 
     history = HistoricalRecords()
 
+    class Meta:
+        verbose_name = pgettext_lazy("Center Transfer model", "Center Transfer")
+        verbose_name_plural = pgettext_lazy(
+            "Center Transfer model", "Centers Transfers"
+        )
+        db_table = "center_transfer"
+
 
 class CenterTransferUnit(BaseModel):
     transfer = models.ForeignKey(
@@ -196,3 +218,13 @@ class CenterTransferUnit(BaseModel):
     )
 
     history = HistoricalRecords()
+
+    class Meta:
+        unique_together = ("transfer", "unit")
+        verbose_name = pgettext_lazy(
+            "Center Transfer Unit model", "Center Transfer Unit"
+        )
+        verbose_name_plural = pgettext_lazy(
+            "Center Transfer Unit model", "Center Transfer Units"
+        )
+        db_table = "center_transfer_unit"
