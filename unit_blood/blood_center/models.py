@@ -50,6 +50,12 @@ class Center(BaseModel):
         verbose_name_plural = pgettext_lazy("Center model", "Centers")
         db_table = "center"
 
+    def __str__(self) -> str:
+        return "(%s) - %s (%s)" % (self.id, self.name, self.type)
+
+    def obtain_distinct_centers(self):
+        return Center.objects.all().exclude(pk=self.pk)
+
 
 class CenterCapacity(BaseModel):
     center = models.ForeignKey(
@@ -77,6 +83,9 @@ class CenterCapacity(BaseModel):
         verbose_name = pgettext_lazy("Center Capacity model", "Center Capacity")
         verbose_name_plural = pgettext_lazy("Center Capacity model", "Centers Capacity")
         db_table = "center_capacity"
+
+    def __str__(self) -> str:
+        return "%s (%s, %s)" % (self.type, self.min_qty, self.max_qty)
 
 
 class Unit(BaseModel):
@@ -136,6 +145,9 @@ class Unit(BaseModel):
         verbose_name = pgettext_lazy("Unit model", "Unit")
         verbose_name_plural = pgettext_lazy("Unit model", "Units")
         db_table = "unit"
+
+    def __str__(self) -> str:
+        return "%s - %s (%s)" % (self.type, self.blood_type, self.expired_at)
 
 
 class CenterTransfer(BaseModel):
@@ -201,6 +213,9 @@ class CenterTransfer(BaseModel):
             "Center Transfer model", "Centers Transfers"
         )
         db_table = "center_transfer"
+
+    def __str__(self) -> str:
+        return "(%s) - %s - %s" % (self.id, self.origin, self.destination)
 
 
 class CenterTransferUnit(BaseModel):

@@ -126,7 +126,7 @@ class InstitutionType:
         (SEMAR, pgettext_lazy("Institution type", "SEMAR")),
         (PRIVADOS, pgettext_lazy("Institution type", "PRIVADOS")),
         (UNIVERSITARIOS, pgettext_lazy("Institution type", "UNIVERSITARIOS")),
-        (CRUZ_ROJA, pgettext_lazy("Institution type", "CRUZ_ROJA")),
+        (CRUZ_ROJA, pgettext_lazy("Institution type", "CRUZ ROJA")),
     ]
 
 
