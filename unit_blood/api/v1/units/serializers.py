@@ -1,7 +1,11 @@
 from rest_framework import serializers
 
+from django.utils.translation import pgettext_lazy
+
 from blood_center.models import Unit
 from blood_center import BloodUnitType, BloodABOSystem, DonorGender
+
+from ..blood_center.serializers import CenterCapacityListSerializer
 
 
 class UnitSerializer(serializers.ModelSerializer):
@@ -25,6 +29,29 @@ class UnitSerializer(serializers.ModelSerializer):
         center = self.context.get("center")
         request = self.context.get("request")
         user = request.user
+        if center.can_create_unit(validated_data.get("type")):
+            capabilities = CenterCapacityListSerializer(
+                center.capabilities.all(), many=True
+            )
+            raise serializers.ValidationError(
+                {
+                    "error": pgettext_lazy(
+                        "Validation error",
+                        "Capacity doesn't exists, so you cannot add this unit",
+                    ),
+                    "available_capacity": capabilities.data,
+                }
+            )
+
+        if not center.can_create_another_unit(validated_data.get("type")):
+            raise serializers.ValidationError(
+                {
+                    "error": pgettext_lazy(
+                        "Validation error",
+                        "Capacity has an exceded if we register this unit, please transfer this or another unit",
+                    ),
+                }
+            )
 
         defaults = {
             "type": validated_data.get("type"),

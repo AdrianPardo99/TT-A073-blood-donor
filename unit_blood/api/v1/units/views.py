@@ -49,7 +49,7 @@ class UnitViewSet(
 
     def list(self, request, center_pk, *args, **kwargs):
         center = get_object_or_404(Center, pk=center_pk)
-        units = center.units.all()
+        units = center.units.filter(is_available=True, is_expired=False)
         serializer = self.get_serializer(
             units,
             many=True,

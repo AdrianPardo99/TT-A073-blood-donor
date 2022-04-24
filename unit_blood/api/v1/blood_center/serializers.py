@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_jwt.settings import api_settings
 
+from django.utils.translation import pgettext_lazy
+
 from blood_center.models import Center, CenterCapacity
 from blood_center import InstitutionType, BloodUnitType
 
@@ -21,7 +23,18 @@ class CenterCapacitySerializer(serializers.ModelSerializer):
         center = self.context.get("center")
         request = self.context.get("request")
         user = request.user
-
+        if center.can_create_capacity(validated_data.get("type")):
+            capabilities = CenterCapacityListSerializer(
+                center.capabilities.all(), many=True
+            )
+            raise serializers.ValidationError(
+                {
+                    "error": pgettext_lazy(
+                        "Validation error", "Capacity already exists"
+                    ),
+                    "available_capacity": capabilities.data,
+                }
+            )
         defaults = {
             "type": validated_data.get("type"),
             "min_qty": validated_data.get("min_qty"),

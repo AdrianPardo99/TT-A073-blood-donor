@@ -56,6 +56,18 @@ class Center(BaseModel):
     def obtain_distinct_centers(self):
         return Center.objects.all().exclude(pk=self.pk)
 
+    def can_create_capacity(self, type):
+        return self.capabilities.filter(type=type).exists()
+
+    def can_create_unit(self, type):
+        return not self.capabilities.filter(type=type).exists()
+
+    def can_create_another_unit(self, type):
+        return self.capabilities.get(type=type).max_qty > (
+            self.units.filter(type=type, is_available=True, is_expired=False).count()
+            + 1
+        )
+
 
 class CenterCapacity(BaseModel):
     center = models.ForeignKey(
