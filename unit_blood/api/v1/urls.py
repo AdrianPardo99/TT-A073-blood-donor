@@ -21,6 +21,14 @@ urlpatterns = [
         r"^centers/(?P<center_pk>.+)/transfers/$", transfers_views.center_transfer_list
     ),
     re_path(
+        r"^centers/(?P<center_pk>.+)/transfers/(?P<transfer_pk>.+)/units/$",
+        transfers_views.center_transfer_unit_list,
+    ),
+    re_path(
+        r"^centers/(?P<center_pk>.+)/transfers/(?P<transfer_pk>.+)/units/(?P<unit_pk>.+)/$",
+        transfers_views.center_transfer_unit_retrieve,
+    ),
+    re_path(
         r"^centers/(?P<center_pk>.+)/transfers/(?P<transfer_pk>.+)/$",
         transfers_views.center_transfer_retrieve,
     ),

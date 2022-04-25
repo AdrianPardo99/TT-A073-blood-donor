@@ -16,9 +16,12 @@ from .serializers import (
     CenterTransferSerializer,
     CenterTransferListSerializer,
     CenterTransferDetailSerializer,
+    CenterTransferUnitDetailListSerializer,
 )
 
-from blood_center.models import CenterTransfer, Center
+from ..units.serializers import UnitDetailSerializer
+
+from blood_center.models import CenterTransfer, Center, Unit
 
 
 class CenterTransferViewSet(
@@ -74,6 +77,56 @@ center_transfer_list = CenterTransferViewSet.as_view(
     }
 )
 center_transfer_retrieve = CenterTransferViewSet.as_view(
+    {
+        "get": "retrieve",
+    }
+)
+
+
+class CenterTransferUnitViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    MultiSerializerViewSetMixin,
+    viewsets.GenericViewSet,
+):
+    pagination_class = DefaultLimitOffsetPagination
+    serializer_action_classes = {
+        "list": CenterTransferUnitDetailListSerializer,
+        "retrieve": UnitDetailSerializer,
+    }
+
+    def list(self, request, center_pk, transfer_pk, *args, **kwargs):
+        transfer = get_object_or_404(CenterTransfer, pk=transfer_pk)
+        center = get_object_or_404(Center, pk=center_pk)
+        if transfer.destination != center:
+            return Response(
+                {"error": "Not in same center"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        units = transfer.units.all()
+        serializer = self.get_serializer(
+            units,
+            many=True,
+        )
+        return self.get_paginated_response(self.paginate_queryset(serializer.data))
+
+    def retrieve(self, request, center_pk, transfer_pk, unit_pk, *args, **kwargs):
+        transfer = get_object_or_404(CenterTransfer, pk=transfer_pk)
+        center = get_object_or_404(Center, pk=center_pk)
+        if transfer.destination != center:
+            return Response(
+                {"error": "Not in same center"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        unit = get_object_or_404(transfer.units, pk=unit_pk)
+        serializer = self.get_serializer(unit.unit)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+center_transfer_unit_list = CenterTransferUnitViewSet.as_view(
+    {
+        "get": "list",
+    }
+)
+center_transfer_unit_retrieve = CenterTransferUnitViewSet.as_view(
     {
         "get": "retrieve",
     }

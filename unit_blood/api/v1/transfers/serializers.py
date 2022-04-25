@@ -6,6 +6,7 @@ from blood_center.models import CenterTransfer, CenterTransferUnit, Unit
 from ..blood_center.serializers import CenterDetailSerializer
 from ..units.serializers import (
     UnitDetailSerializer,
+    UnitListSerializer,
     UnitPlasmaListSerializer,
     UnitErythrocyteListSerializer,
 )
@@ -17,6 +18,16 @@ from core.utils import create_array_random, create_array_from_random
 
 class CenterTransferUnitListSerializer(serializers.ModelSerializer):
     unit = UnitDetailSerializer()
+
+    class Meta:
+        model = CenterTransferUnit
+        fields = [
+            "unit",
+        ]
+
+
+class CenterTransferUnitDetailListSerializer(serializers.ModelSerializer):
+    unit = UnitListSerializer()
 
     class Meta:
         model = CenterTransferUnit
