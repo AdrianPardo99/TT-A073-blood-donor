@@ -51,7 +51,7 @@ class Center(BaseModel):
         db_table = "center"
 
     def __str__(self) -> str:
-        return "(%s) - %s (%s)" % (self.id, self.name, self.type)
+        return "(%s) - %s (%s)" % (self.id, self.name, self.get_type_display())
 
     def obtain_distinct_centers(self):
         return Center.objects.all().exclude(pk=self.pk)
@@ -119,7 +119,7 @@ class Unit(BaseModel):
         choices=BloodABOSystem.CHOICES,
         default=BloodABOSystem.O_PLUS,
     )
-    expired_at = models.DateTimeField(
+    expired_at = models.DateField(
         pgettext_lazy("Unit field", "expired at"),
     )
     # This field tell us if the unit has already used or not yet
@@ -159,7 +159,12 @@ class Unit(BaseModel):
         db_table = "unit"
 
     def __str__(self) -> str:
-        return "%s - %s (%s)" % (self.type, self.blood_type, self.expired_at)
+        return "%s - %s (Expired at: %s) %s" % (
+            self.get_type_display(),
+            self.get_blood_type_display(),
+            self.expired_at,
+            self.center,
+        )
 
 
 class CenterTransfer(BaseModel):
@@ -240,7 +245,7 @@ class CenterTransferUnit(BaseModel):
     unit = models.ForeignKey(
         Unit,
         verbose_name=pgettext_lazy("Center transfer unit field", "unit"),
-        related_name="transfers",
+        related_name="+",
         on_delete=models.PROTECT,
     )
 
@@ -255,3 +260,9 @@ class CenterTransferUnit(BaseModel):
             "Center Transfer Unit model", "Center Transfer Units"
         )
         db_table = "center_transfer_unit"
+
+    def save(self, *args, **kwargs):
+        unit = self.unit
+        unit.is_available = False
+        unit.save()
+        super(CenterTransferUnit, self).save(*args, *kwargs)

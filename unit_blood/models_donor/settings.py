@@ -183,3 +183,12 @@ JWT_AUTH = {
     "JWT_AUTH_HEADER_PREFIX": "Bearer",
     "JWT_AUTH_COOKIE": None,
 }
+
+# Microservices that check if the transfer can do it
+PLATELETS_API = os.environ.get("PLATELETS_API")
+
+# Microservices that check if the units in center can transfer
+PLASMA_API = os.environ.get("PLASMA_API")
+
+# Microservices that makes knapsack problem
+ERYTHROCYTE_API = os.environ.get("ERYTHROCYTE_API")

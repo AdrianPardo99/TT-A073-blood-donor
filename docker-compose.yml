@@ -45,6 +45,19 @@ services:
     stdin_open: true
     tty: true
     restart: on-failure
+
+  erythrocyte_api:
+    build: ./erythrocyte_api
+    command: bash -c "cd erythrocyte_api && uvicorn main:app --reload --host 0.0.0.0"
+    volumes:
+      - .:/code
+    env_file: ./erythrocyte_api/.env
+    ports:
+      - "8087:8000"
+    stdin_open: true
+    tty: true
+    restart: on-failure
+
   power_bi:
     restart: always
     image: metabase/metabase:latest

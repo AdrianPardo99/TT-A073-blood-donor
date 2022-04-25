@@ -102,3 +102,33 @@ class UnitListSerializer(serializers.ModelSerializer):
             "donor_gender",
             "donor_age",
         )
+
+
+class UnitPlasmaListSerializer(serializers.ModelSerializer):
+    blood_type = serializers.CharField(source="get_blood_type_display")
+    compatible = serializers.BooleanField(default=False)
+    weight = serializers.IntegerField(default=0)
+    profit = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = Unit
+        fields = [
+            "id",
+            "blood_type",
+            "compatible",
+            "weight",
+            "profit",
+        ]
+
+
+class UnitErythrocyteListSerializer(serializers.ModelSerializer):
+    weight = serializers.IntegerField(default=0)
+    profit = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = Unit
+        fields = [
+            "id",
+            "weight",
+            "profit",
+        ]
