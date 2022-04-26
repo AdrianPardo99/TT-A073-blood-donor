@@ -19,7 +19,7 @@ class BloodABOSystem:
         (B_MINUS, pgettext_lazy("Blood ABO and RH System type", "B-")),
         (B_PLUS, pgettext_lazy("Blood ABO and RH System type", "B+")),
         (AB_MINUS, pgettext_lazy("Blood ABO and RH System type", "AB-")),
-        (AB_PLUS, pgettext_lazy("Blood ABO and RH System type", "AB-")),
+        (AB_PLUS, pgettext_lazy("Blood ABO and RH System type", "AB+")),
     ]
 
 
