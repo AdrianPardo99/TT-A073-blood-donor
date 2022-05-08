@@ -8,6 +8,10 @@ from blood_center import BloodUnitType, BloodABOSystem, DonorGender
 from ..blood_center.serializers import CenterCapacityListSerializer
 
 
+class UnitExpiredSerializer(serializers.Serializer):
+    reason = serializers.CharField(required=True)
+
+
 class UnitSerializer(serializers.ModelSerializer):
     type = serializers.ChoiceField(choices=BloodUnitType.CHOICES)
     blood_type = serializers.ChoiceField(choices=BloodABOSystem.CHOICES)

@@ -71,8 +71,10 @@ class TransferStatus:
     ARRIVED = "arrived"
     VERIFYING = "verifying"
     FINISHED = "finished"
+    CANCELLED = "cancelled"
 
     CHOICES = [
+        (CANCELLED, pgettext_lazy("Transfer status", "Cancelled")),
         (CREATED, pgettext_lazy("Transfer status", "Created")),
         (CONFIRMED, pgettext_lazy("Transfer status", "Confirmed")),
         (PREPARED, pgettext_lazy("Transfer status", "Prepared")),

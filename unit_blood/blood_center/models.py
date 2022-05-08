@@ -5,6 +5,7 @@ from django.utils.translation import pgettext_lazy
 from simple_history.models import HistoricalRecords
 
 from core.models import BaseModel
+from core.utils import update_user_and_change_reason_history
 
 from . import (
     BloodABOSystem,
@@ -43,7 +44,7 @@ class Center(BaseModel):
         default=InstitutionType.IMSS,
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(table_name="center_history")
 
     class Meta:
         verbose_name = pgettext_lazy("Center model", "Center")
@@ -89,7 +90,7 @@ class CenterCapacity(BaseModel):
         pgettext_lazy("Center Capacity field", "maximum quantity")
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(table_name="center_capacity_history")
 
     class Meta:
         verbose_name = pgettext_lazy("Center Capacity model", "Center Capacity")
@@ -151,7 +152,7 @@ class Unit(BaseModel):
         validators=[MinValueValidator(18)],
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(table_name="unit_history")
 
     class Meta:
         verbose_name = pgettext_lazy("Unit model", "Unit")
@@ -165,6 +166,13 @@ class Unit(BaseModel):
             self.expired_at,
             self.center,
         )
+
+    def expire_unit(self, user, reason):
+        self.is_expired = True
+        self.is_available = False
+        self.can_transfer = False
+        self.save()
+        update_user_and_change_reason_history(self, user, reason)
 
 
 class CenterTransfer(BaseModel):
@@ -222,7 +230,7 @@ class CenterTransfer(BaseModel):
         default=1,
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(table_name="center_transfer_history")
 
     class Meta:
         verbose_name = pgettext_lazy("Center Transfer model", "Center Transfer")
@@ -233,6 +241,162 @@ class CenterTransfer(BaseModel):
 
     def __str__(self) -> str:
         return "(%s) - %s - %s" % (self.id, self.origin, self.destination)
+
+    def can_cancel(self):
+        return self.status in [
+            TransferStatus.CREATED,
+            TransferStatus.CONFIRMED,
+            TransferStatus.PREPARED,
+        ]
+
+    def cancel(self):
+        if not self.can_cancel():
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot cancel transfer"
+            )
+        for unit in self.units.all():
+            unit.deallocate()
+        self.status = TransferStatus.CANCELLED
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer cancelled successfully"
+        )
+
+    def can_confirm(self, center):
+        return self.status in [TransferStatus.CREATED] and self.origin in [center]
+
+    def confirm(self, center):
+        if not self.can_confirm(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot confirm transfer"
+            )
+        self.status = TransferStatus.CONFIRMED
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer confirmed successfully"
+        )
+
+    def can_prepare(self, center):
+        return self.status in [TransferStatus.CONFIRMED] and self.origin in [center]
+
+    def prepare(self, center):
+        if not self.can_prepare(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot prepare transfer"
+            )
+        self.status = TransferStatus.PREPARED
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer prepared successfully"
+        )
+
+    def can_send(self, center):
+        return self.status in [TransferStatus.PREPARED] and self.origin in [center]
+
+    def send(self, center):
+        if not self.can_send(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot send transfer"
+            )
+        self.status = TransferStatus.SENDING
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer sending successfully"
+        )
+
+    def can_transit(self, center):
+        return self.status in [TransferStatus.SENDING] and self.origin in [center]
+
+    def transit(self, center):
+        if not self.can_transit(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot change to in transit transfer"
+            )
+        self.status = TransferStatus.IN_TRANSIT
+        self.save()
+        return True, pgettext_lazy("Center transfer message", "Transfer in transit")
+
+    def can_arrive(self, center):
+        return self.status in [TransferStatus.IN_TRANSIT] and self.destination in [
+            center
+        ]
+
+    def arrive(self, center):
+        if not self.can_arrive(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot arrive transfer"
+            )
+        self.status = TransferStatus.ARRIVED
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer arrive successfully"
+        )
+
+    def can_verify(self, center):
+        return self.status in [TransferStatus.ARRIVED] and self.destination in [center]
+
+    def verify(self, center):
+        if not self.can_verify(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot verifying transfer"
+            )
+        self.status = TransferStatus.VERIFYING
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer verifying successfully"
+        )
+
+    def can_finish(self, center):
+        return self.status in [TransferStatus.VERIFYING] and self.destination in [
+            center
+        ]
+
+    def finish(self, center):
+        if not self.can_finish(center):
+            return False, pgettext_lazy(
+                "Center transfer message", "Cannot finish transfer"
+            )
+        destination = self.destination
+        for unit in self.units.all():
+            unit.change_center(destination)
+        self.status = TransferStatus.FINISHED
+        self.save()
+        return True, pgettext_lazy(
+            "Center transfer message", "Transfer finished and units are in center"
+        )
+
+    def petition_next_status(self, center):
+        changed = False
+        msg = None
+        status = None
+        if self.status in [TransferStatus.CREATED]:
+            changed, msg = self.confirm(center)
+            status = TransferStatus.CONFIRMED
+        elif self.status in [TransferStatus.CONFIRMED]:
+            changed, msg = self.prepare(center)
+            status = TransferStatus.PREPARED
+        elif self.status in [TransferStatus.PREPARED]:
+            changed, msg = self.send(center)
+            status = TransferStatus.SENDING
+        elif self.status in [TransferStatus.SENDING]:
+            changed, msg = self.transit(center)
+            status = TransferStatus.IN_TRANSIT
+        return changed, msg, status
+
+    def transfer_next_status(self, center):
+        changed = False
+        msg = None
+        status = None
+        if self.status in [TransferStatus.IN_TRANSIT]:
+            changed, msg = self.arrive(center)
+            status = TransferStatus.ARRIVED
+        elif self.status in [TransferStatus.ARRIVED]:
+            changed, msg = self.verify(center)
+            status = TransferStatus.VERIFYING
+        elif self.status in [TransferStatus.VERIFYING]:
+            changed, msg = self.finish(center)
+            status = TransferStatus.FINISHED
+        return changed, msg, status
 
 
 class CenterTransferUnit(BaseModel):
@@ -249,7 +413,7 @@ class CenterTransferUnit(BaseModel):
         on_delete=models.PROTECT,
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(table_name="center_transfer_unit_history")
 
     class Meta:
         unique_together = ("transfer", "unit")
@@ -261,8 +425,19 @@ class CenterTransferUnit(BaseModel):
         )
         db_table = "center_transfer_unit"
 
-    def save(self, *args, **kwargs):
+    def reserve_uni(self):
         unit = self.unit
         unit.is_available = False
         unit.save()
-        super(CenterTransferUnit, self).save(*args, *kwargs)
+
+    def deallocate(self):
+        unit = self.unit
+        unit.is_available = True
+        unit.save()
+
+    def change_center(self, center):
+        unit = self.unit
+        unit.is_available = True
+        unit.can_transfer = False
+        unit.center = center
+        unit.save()

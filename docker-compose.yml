@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   unit_blood:
     build: .
     command: python unit_blood/manage.py runserver 0.0.0.0:8000
@@ -14,6 +15,7 @@ services:
     stdin_open: true
     tty: true
     restart: on-failure
+
   db:
     restart: always
     image: postgres:11

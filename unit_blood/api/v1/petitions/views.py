@@ -12,7 +12,7 @@ from rest_framework.pagination import PageNumberPagination
 from api.mixins import MultiSerializerViewSetMixin
 from ..pagination import DefaultLimitOffsetPagination
 
-from .serializers import (
+from ..transfers.serializers import (
     CenterTransferSerializer,
     CenterTransferListSerializer,
     CenterTransferDetailSerializer,
@@ -24,9 +24,16 @@ from ..units.serializers import UnitDetailSerializer
 from blood_center.models import CenterTransfer, Center, Unit
 from blood_center import TransferStatus
 
+origin_status = [
+    TransferStatus.CREATED,
+    TransferStatus.CONFIRMED,
+    TransferStatus.PREPARED,
+    TransferStatus.SENDING,
+    TransferStatus.IN_TRANSIT,
+]
 
-class CenterTransferViewSet(
-    mixins.CreateModelMixin,
+
+class PetitionViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     MultiSerializerViewSetMixin,
@@ -38,24 +45,12 @@ class CenterTransferViewSet(
         "retrieve": CenterTransferDetailSerializer,
     }
 
-    def create(self, request, center_pk, *args, **kwargs):
-        center = get_object_or_404(Center, pk=center_pk)
-        serializer = CenterTransferSerializer(
-            data=request.data, context={"request": request, "center": center}
-        )
-        if serializer.is_valid():
-            transfer = serializer.save()
-            output_serializer = CenterTransferDetailSerializer(
-                transfer, context={"request": request}, many=True
-            )
-            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def list(self, request, center_pk, *args, **kwargs):
         center = get_object_or_404(Center, pk=center_pk)
-        transfers = CenterTransfer.objects.filter(destination=center)
-        if not transfers.exists():
-            get_object_or_404(CenterTransfer, pk=0)
+        transfers = CenterTransfer.objects.filter(
+            origin=center, status__in=origin_status
+        )
+
         serializer = self.get_serializer(
             transfers,
             many=True,
@@ -64,7 +59,9 @@ class CenterTransferViewSet(
 
     def retrieve(self, request, center_pk, transfer_pk, *args, **kwargs):
         center = get_object_or_404(Center, pk=center_pk)
-        transfer = CenterTransfer.objects.filter(pk=transfer_pk, destination=center)
+        transfer = CenterTransfer.objects.filter(
+            pk=transfer_pk, origin=center, status__in=origin_status
+        )
         if not transfer.exists():
             get_object_or_404(CenterTransfer, pk=0)
         serializer = self.get_serializer(transfer, many=True)
@@ -75,7 +72,7 @@ class CenterTransferViewSet(
         center = get_object_or_404(Center, pk=center_pk)
         transfer = CenterTransfer.objects.filter(
             pk=transfer_pk,
-            destination=center,
+            origin=center,
         )
         if not transfer.exists():
             get_object_or_404(CenterTransfer, pk=0)
@@ -88,11 +85,13 @@ class CenterTransferViewSet(
     @action(detail=True, methods=["PUT"])
     def next_status(self, request, center_pk, transfer_pk, *args, **kwargs):
         center = get_object_or_404(Center, pk=center_pk)
-        transfer = CenterTransfer.objects.filter(pk=transfer_pk, destination=center)
+        transfer = CenterTransfer.objects.filter(
+            pk=transfer_pk, origin=center, status__in=origin_status
+        )
         if not transfer.exists():
             get_object_or_404(CenterTransfer, pk=0)
         transfer = transfer.first()
-        change, msg, trans_status = transfer.transfer_next_status(center)
+        change, msg, trans_status = transfer.petition_next_status(center)
         if not trans_status:
             trans_status = transfer.status
         return Response(
@@ -100,13 +99,12 @@ class CenterTransferViewSet(
         )
 
 
-center_transfer_list = CenterTransferViewSet.as_view(
+petition_list = PetitionViewSet.as_view(
     {
         "get": "list",
-        "post": "create",
     }
 )
-center_transfer_retrieve = CenterTransferViewSet.as_view(
+petition_retrieve = PetitionViewSet.as_view(
     {
         "get": "retrieve",
         "delete": "cancel",
@@ -115,7 +113,7 @@ center_transfer_retrieve = CenterTransferViewSet.as_view(
 )
 
 
-class CenterTransferUnitViewSet(
+class PetitionUnitViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     MultiSerializerViewSetMixin,
@@ -130,7 +128,7 @@ class CenterTransferUnitViewSet(
     def list(self, request, center_pk, transfer_pk, *args, **kwargs):
         transfer = get_object_or_404(CenterTransfer, pk=transfer_pk)
         center = get_object_or_404(Center, pk=center_pk)
-        if transfer.destination != center:
+        if transfer.origin != center:
             return Response(
                 {"error": "Not in same center"}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -144,7 +142,7 @@ class CenterTransferUnitViewSet(
     def retrieve(self, request, center_pk, transfer_pk, unit_pk, *args, **kwargs):
         transfer = get_object_or_404(CenterTransfer, pk=transfer_pk)
         center = get_object_or_404(Center, pk=center_pk)
-        if transfer.destination != center:
+        if transfer.origin != center:
             return Response(
                 {"error": "Not in same center"}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -153,12 +151,12 @@ class CenterTransferUnitViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-center_transfer_unit_list = CenterTransferUnitViewSet.as_view(
+petition_unit_list = PetitionUnitViewSet.as_view(
     {
         "get": "list",
     }
 )
-center_transfer_unit_retrieve = CenterTransferUnitViewSet.as_view(
+petition_unit_retrieve = PetitionUnitViewSet.as_view(
     {
         "get": "retrieve",
     }

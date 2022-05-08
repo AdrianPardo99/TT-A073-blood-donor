@@ -9,6 +9,7 @@ from rest_framework_jwt.views import (
 from .blood_center import views as blood_center_views
 from .units import views as unit_views
 from .transfers import views as transfers_views
+from .petitions import views as petitions_views
 
 urlpatterns = [
     # Auth related
@@ -17,6 +18,23 @@ urlpatterns = [
     re_path(r"^auth/refresh/$", refresh_jwt_token),
     re_path(r"^type-centers/$", blood_center_views.center_type_list),
     re_path(r"^centers/$", blood_center_views.center_list),
+    re_path(
+        r"^centers/(?P<center_pk>.+)/petitions/(?P<transfer_pk>.+)/units/(?P<unit_pk>.+)/$",
+        petitions_views.petition_unit_retrieve,
+    ),
+    re_path(
+        r"^centers/(?P<center_pk>.+)/petitions/(?P<transfer_pk>.+)/units/$",
+        petitions_views.petition_unit_list,
+    ),
+    re_path(
+        r"^centers/(?P<center_pk>.+)/petitions/(?P<transfer_pk>.+)/cancel/$",  # [DELETE]
+        petitions_views.petition_unit_list,
+    ),
+    re_path(
+        r"^centers/(?P<center_pk>.+)/petitions/(?P<transfer_pk>.+)/$",
+        petitions_views.petition_retrieve,
+    ),
+    re_path(r"^centers/(?P<center_pk>.+)/petitions/$", petitions_views.petition_list),
     re_path(
         r"^centers/(?P<center_pk>.+)/transfers/$", transfers_views.center_transfer_list
     ),

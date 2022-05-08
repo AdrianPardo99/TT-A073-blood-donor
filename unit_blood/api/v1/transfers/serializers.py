@@ -95,6 +95,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                             type=unit_type,
                             is_available=True,
                             is_expired=False,
+                            can_transfer=True,
                             expired_at__gt=deadline,
                         )
                         .exists()
@@ -112,6 +113,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                             type=unit_type,
                             is_available=True,
                             is_expired=False,
+                            can_transfer=True,
                             expired_at__gt=deadline,
                         ),
                         many=True,
@@ -188,7 +190,11 @@ class CenterTransferDetailSerializer(serializers.ModelSerializer):
     destination = CenterDetailSerializer()
     status = serializers.CharField(source="get_status_display")
     type_deadline = serializers.CharField(source="get_type_deadline_display")
+    receptor_blood_type = serializers.CharField(
+        source="get_receptor_blood_type_display"
+    )
     units = CenterTransferUnitListSerializer(many=True)
+    unit_type = serializers.CharField(source="get_unit_type_display")
 
     class Meta:
         model = CenterTransfer
@@ -212,6 +218,10 @@ class CenterTransferListSerializer(serializers.ModelSerializer):
     destination = CenterDetailSerializer()
     status = serializers.CharField(source="get_status_display")
     type_deadline = serializers.CharField(source="get_type_deadline_display")
+    receptor_blood_type = serializers.CharField(
+        source="get_receptor_blood_type_display"
+    )
+    unit_type = serializers.CharField(source="get_unit_type_display")
 
     class Meta:
         model = CenterTransfer
@@ -222,4 +232,6 @@ class CenterTransferListSerializer(serializers.ModelSerializer):
             "status",
             "deadline",
             "type_deadline",
+            "receptor_blood_type",
+            "unit_type",
         ]

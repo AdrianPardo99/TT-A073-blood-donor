@@ -16,6 +16,7 @@ from .serializers import (
     UnitSerializer,
     UnitDetailSerializer,
     UnitListSerializer,
+    UnitExpiredSerializer,
 )
 
 from blood_center.models import Unit, Center
@@ -62,6 +63,18 @@ class UnitViewSet(
         serializer = self.get_serializer(unit)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=["DELETE"])
+    def expire(self, request, center_pk, unit_pk, *args, **kwargs):
+        center = get_object_or_404(Center, pk=center_pk)
+        unit = get_object_or_404(center.units, pk=unit_pk, is_expired=False)
+        serializer = UnitExpiredSerializer(data=request.data)
+        if serializer.is_valid():
+            reason = serializer.validated_data.get("reason")
+            unit.expire_unit(request.user, reason)
+            output_serializer = UnitDetailSerializer(unit)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 unit_list = UnitViewSet.as_view(
     {
@@ -72,5 +85,6 @@ unit_list = UnitViewSet.as_view(
 unit_retrieve = UnitViewSet.as_view(
     {
         "get": "retrieve",
+        "delete": "expire",
     }
 )
