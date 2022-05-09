@@ -441,3 +441,26 @@ class CenterTransferUnit(BaseModel):
         unit.can_transfer = False
         unit.center = center
         unit.save()
+
+
+class CenterTransferUnitIncident(BaseModel):
+    unit = models.ForeignKey(
+        CenterTransferUnit,
+        verbose_name=pgettext_lazy("Center transfer unit incident", "unit"),
+        related_name="incidents",
+        on_delete=models.PROTECT,
+    )
+    incident = models.CharField(
+        pgettext_lazy("Center transfer unit incident", "incident"),
+        max_length=500,
+    )
+    history = HistoricalRecords(table_name="center_transfer_unit_incident_history")
+
+    class Meta:
+        verbose_name = pgettext_lazy(
+            "Center Transfer Unit Incident model", "Center Transfer Unit Incident"
+        )
+        verbose_name_plural = pgettext_lazy(
+            "Center Transfer Unit Incident model", "Center Transfer Unit Incidents"
+        )
+        db_table = "center_transfer_unit_incident"

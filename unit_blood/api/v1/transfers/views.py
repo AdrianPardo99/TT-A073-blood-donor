@@ -20,6 +20,10 @@ from .serializers import (
 )
 
 from ..units.serializers import UnitDetailSerializer
+from ..incidents.serializers import (
+    CenterTransferUnitIncidentSerializer,
+    CenterTransferUnitIncicentDetailSerializer,
+)
 
 from blood_center.models import CenterTransfer, Center, Unit
 from blood_center import TransferStatus
@@ -125,6 +129,7 @@ class CenterTransferUnitViewSet(
     serializer_action_classes = {
         "list": CenterTransferUnitDetailListSerializer,
         "retrieve": UnitDetailSerializer,
+        "incident": CenterTransferUnitIncidentSerializer,
     }
 
     def list(self, request, center_pk, transfer_pk, *args, **kwargs):
@@ -152,6 +157,26 @@ class CenterTransferUnitViewSet(
         serializer = self.get_serializer(unit.unit)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=["POST"])
+    def incident(self, request, center_pk, transfer_pk, unit_pk, *args, **kwargs):
+        transfer = get_object_or_404(CenterTransfer, pk=transfer_pk)
+        center = get_object_or_404(Center, pk=center_pk)
+        if transfer.destination != center:
+            return Response(
+                {"error": "Not in same center"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        unit = get_object_or_404(transfer.units, pk=unit_pk)
+        serializer = self.get_serializer(
+            data=request.data, context={"request": request, "transfer_unit": unit}
+        )
+        if serializer.is_valid():
+            incident = serializer.save()
+            output_serializer = CenterTransferUnitIncicentDetailSerializer(
+                incident, context={"request": request}
+            )
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 center_transfer_unit_list = CenterTransferUnitViewSet.as_view(
     {
@@ -161,5 +186,6 @@ center_transfer_unit_list = CenterTransferUnitViewSet.as_view(
 center_transfer_unit_retrieve = CenterTransferUnitViewSet.as_view(
     {
         "get": "retrieve",
+        "post": "incident",
     }
 )
