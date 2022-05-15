@@ -20,7 +20,7 @@ app.add_middleware(
 def information_about():
     about = {
         "title": os.environ.get("APP_NAME"),
-        "description": "This API is working for resolve Knapsack Problem with blood units",
+        "description": "This API is working for solve Knapsack Problem with blood units",
         "version": os.environ.get("VERSION"),
     }
     return about
