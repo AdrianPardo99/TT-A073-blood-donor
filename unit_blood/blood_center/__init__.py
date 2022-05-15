@@ -33,7 +33,7 @@ class BloodUnitType:
 
     CHOICES = [
         (ST, pgettext_lazy("Blood unit type", "ST (Sangre total)")),
-        (CE, pgettext_lazy("Blood unit type", "CE (Concentrado de eritorcitos)")),
+        (CE, pgettext_lazy("Blood unit type", "CE (Concentrado de eritrorcitos)")),
         (CP, pgettext_lazy("Blood unit type", "CP (Concentrado de plaquetas)")),
         (PF, pgettext_lazy("Blood unit type", "PF (Plasma fresco)")),
         (
