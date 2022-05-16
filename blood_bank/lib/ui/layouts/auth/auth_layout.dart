@@ -14,7 +14,6 @@ class AuthLayout extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Scrollbar(
-        isAlwaysShown: true,
         child: ListView(
           physics: ClampingScrollPhysics(),
           children: [

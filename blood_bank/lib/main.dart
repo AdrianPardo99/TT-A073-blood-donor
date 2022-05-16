@@ -1,10 +1,30 @@
-import 'package:blood_bank/router/router.dart';
-import 'package:blood_bank/ui/layouts/auth/auth_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+import 'package:blood_bank/router/router.dart';
+import 'package:blood_bank/providers/auth_provider.dart';
+import 'package:blood_bank/ui/layouts/auth/auth_layout.dart';
+import 'package:blood_bank/services/local_storage.dart';
+import 'package:blood_bank/services/navigation_service.dart';
+
+void main() async {
+  await LocalStorage.configurePrefs();
   Flurorouter.configureRoutes();
-  runApp(MyApp());
+  runApp(AppState());
+}
+
+class AppState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        )
+      ],
+      child: MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -15,6 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Blood bank application - dashboard',
       initialRoute: Flurorouter.loginRoute,
       onGenerateRoute: Flurorouter.router.generator,
+      navigatorKey: NavigationService.navigatorKey,
       builder: (_, child) {
         return AuthLayout(
           child: child!,
