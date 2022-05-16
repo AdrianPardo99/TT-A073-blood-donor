@@ -1,3 +1,4 @@
+import 'package:blood_bank/ui/shared/sidebar.dart';
 import 'package:flutter/material.dart';
 
 class DashboardLayout extends StatelessWidget {
@@ -8,18 +9,13 @@ class DashboardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        backgroundColor: Color(0xFFEDF1F2),
+        body: Row(
           children: [
-            Text(
-              "Dashboard",
-              style: TextStyle(fontSize: 50),
-            ),
+            /* TODO mas de 700 px */
+            Sidebar(),
             Expanded(child: child),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
