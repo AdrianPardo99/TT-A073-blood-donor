@@ -1,3 +1,5 @@
+import 'package:blood_bank/ui/layouts/dashboard/dashboard_layout.dart';
+import 'package:blood_bank/ui/layouts/splash/splash_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +21,7 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          lazy: false,
           create: (_) => AuthProvider(),
         )
       ],
@@ -37,6 +40,13 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: Flurorouter.router.generator,
       navigatorKey: NavigationService.navigatorKey,
       builder: (_, child) {
+        final authProvider = Provider.of<AuthProvider>(context);
+        if (authProvider.authStatus == AuthStatus.checking) {
+          return SplashLayout();
+        }
+        if (authProvider.authStatus == AuthStatus.authenticated) {
+          return DashboardLayout(child: child!);
+        }
         return AuthLayout(
           child: child!,
         );
