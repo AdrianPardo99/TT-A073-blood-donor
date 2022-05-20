@@ -1,3 +1,4 @@
+import 'package:blood_bank/providers/side_menu_provider.dart';
 import 'package:blood_bank/ui/layouts/dashboard/dashboard_layout.dart';
 import 'package:blood_bank/ui/layouts/splash/splash_layout.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,11 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(
           lazy: false,
           create: (_) => AuthProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => SideMenuProvider(),
+        ),
       ],
       child: MyApp(),
     );

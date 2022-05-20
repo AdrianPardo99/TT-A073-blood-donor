@@ -10,9 +10,12 @@ class Flurorouter {
   /* Root */
   static String rootRoute = "/";
   /* Auth route */
-  static String loginRoute = "/auth/login";
+  static String loginRoute = "/auth/login/";
   /* Db routes */
-  static String dbRoute = "/dashboard";
+  static String dbRoute = "/dashboard/capabilities/";
+  static String unitsRoute = "/dashboard/units/";
+  static String transfersRoute = "/dashboard/transfers/";
+  static String petitionsRoute = "/dashboard/petitions/";
 
   /* Auth routes */
 
@@ -20,7 +23,9 @@ class Flurorouter {
     router.define(loginRoute, handler: AdminHandlers.login);
 
     router.define(dbRoute, handler: DashboardHandlers.dashboard);
-
+    router.define(unitsRoute, handler: DashboardHandlers.units);
+    router.define(transfersRoute, handler: DashboardHandlers.transfers);
+    router.define(petitionsRoute, handler: DashboardHandlers.petitions);
     /* 404 */
     router.notFoundHandler = NotFoundHandlers.noPageFound;
   }
