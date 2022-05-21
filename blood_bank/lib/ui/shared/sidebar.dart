@@ -1,3 +1,4 @@
+import 'package:blood_bank/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,6 @@ class Sidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sideMenuProvider = Provider.of<SideMenuProvider>(context);
-    print(sideMenuProvider.currentPage);
     return Container(
       width: 200,
       height: double.infinity,
@@ -67,8 +67,7 @@ class Sidebar extends StatelessWidget {
             text: "Cerrar sesión",
             icon: Icons.logout_outlined,
             onPressed: () {
-              print("Cerrar sesión");
-              SideMenuProvider.closeMenu();
+              Provider.of<AuthProvider>(context, listen: false).logout();
             },
           ),
         ],

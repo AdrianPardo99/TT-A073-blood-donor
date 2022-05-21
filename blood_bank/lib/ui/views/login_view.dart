@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:blood_bank/providers/login_form_provider.dart';
 import 'package:blood_bank/ui/buttons/custom_outlined.dart';
-import 'package:blood_bank/providers/auth_provider.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:blood_bank/ui/inputs/custom_inputs.dart';
+import 'package:blood_bank/providers/auth_provider.dart';
+import 'package:blood_bank/providers/login_form_provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -35,6 +35,8 @@ class LoginView extends StatelessWidget {
                     children: [
                       /* Email */
                       TextFormField(
+                        onFieldSubmitted: (_) =>
+                            onFormSubmit(loginFormProvider, authProvider),
                         validator: (value) {
                           if (!EmailValidator.validate(value ?? "xxxx"))
                             return "Email no valido";
@@ -52,6 +54,8 @@ class LoginView extends StatelessWidget {
                       ),
                       /* Password */
                       TextFormField(
+                        onFieldSubmitted: (_) =>
+                            onFormSubmit(loginFormProvider, authProvider),
                         onChanged: (value) =>
                             loginFormProvider.password = value,
                         validator: (value) {
@@ -70,15 +74,8 @@ class LoginView extends StatelessWidget {
                         height: 20,
                       ),
                       CustomOutlinedButton(
-                        onPressed: () {
-                          final isValid = loginFormProvider.validateForm();
-                          if (isValid) {
-                            authProvider.login(
-                              loginFormProvider.email,
-                              loginFormProvider.password,
-                            );
-                          }
-                        },
+                        onPressed: () =>
+                            onFormSubmit(loginFormProvider, authProvider),
                         text: "Ingresar",
                         color: Colors.redAccent,
                         isFilled: true,
@@ -92,5 +89,16 @@ class LoginView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void onFormSubmit(
+      LoginFromProvider loginFromProvider, AuthProvider authProvider) {
+    final isValid = loginFromProvider.validateForm();
+    if (isValid) {
+      authProvider.login(
+        loginFromProvider.email,
+        loginFromProvider.password,
+      );
+    }
   }
 }

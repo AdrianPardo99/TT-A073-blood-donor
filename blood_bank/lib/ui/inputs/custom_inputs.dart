@@ -7,6 +7,7 @@ class CustomInputs {
     required IconData icon,
   }) {
     return InputDecoration(
+      errorStyle: TextStyle(color: Colors.white),
       border: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
       ),

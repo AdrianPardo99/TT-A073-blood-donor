@@ -7,7 +7,7 @@ import 'package:blood_bank/ui/views/not_found_view.dart';
 class NotFoundHandlers {
   static Handler noPageFound = Handler(handlerFunc: (context, parameters) {
     Provider.of<SideMenuProvider>(context!, listen: false)
-        .setCurrentPageUrl("/404");
+        .setCurrentPageUrl("/404/");
     return NotFoundView();
   });
 }

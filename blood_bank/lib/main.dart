@@ -1,17 +1,21 @@
-import 'package:blood_bank/providers/side_menu_provider.dart';
-import 'package:blood_bank/ui/layouts/dashboard/dashboard_layout.dart';
-import 'package:blood_bank/ui/layouts/splash/splash_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:blood_bank/router/router.dart';
-import 'package:blood_bank/providers/auth_provider.dart';
-import 'package:blood_bank/ui/layouts/auth/auth_layout.dart';
+import 'package:blood_bank/services/notification_service.dart';
 import 'package:blood_bank/services/local_storage.dart';
 import 'package:blood_bank/services/navigation_service.dart';
+import 'package:blood_bank/ui/layouts/dashboard/dashboard_layout.dart';
+import 'package:blood_bank/ui/layouts/splash/splash_layout.dart';
+import 'package:blood_bank/ui/layouts/auth/auth_layout.dart';
+import 'package:blood_bank/api/unit_blood_api.dart';
+
+import 'package:blood_bank/providers/side_menu_provider.dart';
+import 'package:blood_bank/providers/auth_provider.dart';
 
 void main() async {
   await LocalStorage.configurePrefs();
+  UnitBloodApi.configureDio();
   Flurorouter.configureRoutes();
   runApp(AppState());
 }
@@ -40,10 +44,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Blood bank application - dashboard',
+      title: 'Blood bank application',
       initialRoute: Flurorouter.loginRoute,
       onGenerateRoute: Flurorouter.router.generator,
       navigatorKey: NavigationService.navigatorKey,
+      scaffoldMessengerKey: NotificationService.msgKey,
       builder: (_, child) {
         final authProvider = Provider.of<AuthProvider>(context);
         if (authProvider.authStatus == AuthStatus.checking) {

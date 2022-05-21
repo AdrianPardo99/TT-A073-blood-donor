@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:blood_bank/api/unit_blood_api.dart';
+import 'package:blood_bank/models/http/auth_response.dart';
 import 'package:blood_bank/router/router.dart';
 import 'package:blood_bank/services/local_storage.dart';
 import 'package:blood_bank/services/navigation_service.dart';
-import 'package:flutter/material.dart';
 
 enum AuthStatus { checking, authenticated, notAuthenticated }
 
 class AuthProvider extends ChangeNotifier {
   String? _token;
   AuthStatus authStatus = AuthStatus.checking;
+  User? user;
 
   AuthProvider() {
     this.isAuthenticated();
@@ -15,15 +19,33 @@ class AuthProvider extends ChangeNotifier {
 
   login(String email, password) {
     /* Todo. Peticion a backend */
-    _token = "sadasdoasdasdoasdjk.jasdasjkdhjkwdhjkasdjsad.sadasdasdas";
-    LocalStorage.prefs.setString("token", this._token ?? "");
-    LocalStorage.prefs.getString("token");
-    print("Almacena JWT");
-    // Navigate to dashboard
-    authStatus = AuthStatus.authenticated;
+    final data = {
+      "email": email,
+      "password": password,
+    };
+    UnitBloodApi.httpPost("/auth/login/", data).then(
+      (json) {
+        final authResponse = AuthResponse.fromMap(json);
+        this.user = authResponse.user;
+        authStatus = AuthStatus.authenticated;
+        LocalStorage.prefs.setString("token", authResponse.token);
+        LocalStorage.prefs.setInt("center_id", authResponse.user.center.id);
+        UnitBloodApi.configureDio();
+        notifyListeners();
+        NavigationService.replaceTo(Flurorouter.dbRoute);
+      },
+    ).catchError(
+      (e) {
+        //
+      },
+    );
+  }
 
+  logout() {
+    LocalStorage.prefs.remove("token");
+    LocalStorage.prefs.remove("center_id");
+    authStatus = AuthStatus.notAuthenticated;
     notifyListeners();
-    NavigationService.replaceTo(Flurorouter.dbRoute);
   }
 
   Future<bool> isAuthenticated() async {
@@ -34,9 +56,19 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
     /* Petition HTTP para backend para comprobar JWT */
-    await Future.delayed(Duration(milliseconds: 1000));
-    authStatus = AuthStatus.authenticated;
+    bool flag = false;
+    final data = {
+      "token": LocalStorage.prefs.getString("token"),
+    };
+    await UnitBloodApi.httpPost("/auth/verify/", data).then((json) {
+      final authResponse = AuthResponse.fromMap(json);
+      this.user = authResponse.user;
+      authStatus = AuthStatus.authenticated;
+      flag = true;
+    }).catchError((e) {
+      flag = false;
+    });
     notifyListeners();
-    return true;
+    return flag;
   }
 }
