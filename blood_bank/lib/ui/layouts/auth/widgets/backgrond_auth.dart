@@ -26,7 +26,7 @@ class BackgroundAuth extends StatelessWidget {
   BoxDecoration _BuildBoxDecoration() {
     return BoxDecoration(
       image: DecorationImage(
-        image: AssetImage("login.jpg"),
+        image: AssetImage("login_1.jpg"),
         fit: BoxFit.cover,
       ),
     );

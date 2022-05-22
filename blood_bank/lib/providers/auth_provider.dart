@@ -1,3 +1,4 @@
+import 'package:blood_bank/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:blood_bank/api/unit_blood_api.dart';
@@ -9,12 +10,11 @@ import 'package:blood_bank/services/navigation_service.dart';
 enum AuthStatus { checking, authenticated, notAuthenticated }
 
 class AuthProvider extends ChangeNotifier {
-  String? _token;
   AuthStatus authStatus = AuthStatus.checking;
   User? user;
 
   AuthProvider() {
-    this.isAuthenticated();
+    isAuthenticated();
   }
 
   login(String email, password) {
@@ -26,7 +26,7 @@ class AuthProvider extends ChangeNotifier {
     UnitBloodApi.httpPost("/auth/login/", data).then(
       (json) {
         final authResponse = AuthResponse.fromMap(json);
-        this.user = authResponse.user;
+        user = authResponse.user;
         authStatus = AuthStatus.authenticated;
         LocalStorage.prefs.setString("token", authResponse.token);
         LocalStorage.prefs.setInt("center_id", authResponse.user.center.id);
@@ -37,6 +37,7 @@ class AuthProvider extends ChangeNotifier {
     ).catchError(
       (e) {
         //
+        NotificationService.showSnackbarError("Credenciales incorrectas");
       },
     );
   }
@@ -62,7 +63,7 @@ class AuthProvider extends ChangeNotifier {
     };
     await UnitBloodApi.httpPost("/auth/verify/", data).then((json) {
       final authResponse = AuthResponse.fromMap(json);
-      this.user = authResponse.user;
+      user = authResponse.user;
       authStatus = AuthStatus.authenticated;
       flag = true;
     }).catchError((e) {

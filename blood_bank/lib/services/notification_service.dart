@@ -14,4 +14,15 @@ class NotificationService {
     );
     msgKey.currentState!.showSnackBar(snackbar);
   }
+
+  static showSnackbar(String msg) {
+    final snackbar = SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.white, fontSize: 20),
+      ),
+      backgroundColor: Colors.green.withOpacity(0.9),
+    );
+    msgKey.currentState!.showSnackBar(snackbar);
+  }
 }

@@ -77,7 +77,7 @@ class LoginView extends StatelessWidget {
                         onPressed: () =>
                             onFormSubmit(loginFormProvider, authProvider),
                         text: "Ingresar",
-                        color: Colors.redAccent,
+                        color: Colors.red,
                         isFilled: true,
                       ),
                     ],

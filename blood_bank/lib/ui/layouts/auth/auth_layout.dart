@@ -63,7 +63,7 @@ class _DesktopBody extends StatelessWidget {
               children: [
                 CustomTitle(),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Expanded(child: child),
               ],
@@ -88,7 +88,7 @@ class _MobileBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           CustomTitle(),
           Container(

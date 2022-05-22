@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:blood_bank/services/local_storage.dart';
 
 class UnitBloodApi {
-  static Dio _dio = new Dio();
+  static final Dio _dio = Dio();
 
   /* Configure dio HTTP client */
   static void configureDio() {
@@ -21,7 +21,6 @@ class UnitBloodApi {
       final resp = await _dio.get(path);
       return resp.data;
     } catch (e) {
-      print(e);
       throw ("Error in get petition");
     }
   }
@@ -33,8 +32,32 @@ class UnitBloodApi {
       final resp = await _dio.post(path, data: formData);
       return resp.data;
     } catch (e) {
-      print(e);
+      if (e is DioError) {
+        throw ("${e.response!.data}");
+      }
       throw ("Error in post petition");
+    }
+  }
+
+  /* Configure put http client */
+  static Future httpPut(String path, Map<String, dynamic> data) async {
+    final formData = FormData.fromMap(data);
+    try {
+      final resp = await _dio.put(path, data: formData);
+      return resp.data;
+    } catch (e) {
+      throw ("Error in put petition");
+    }
+  }
+
+  /* Configure delete http client */
+  static Future httpDelete(String path, Map<String, dynamic> data) async {
+    try {
+      final formData = FormData.fromMap(data);
+      final resp = await _dio.delete(path, data: formData);
+      return resp.data;
+    } catch (e) {
+      throw ("Error in delete petition");
     }
   }
 }
