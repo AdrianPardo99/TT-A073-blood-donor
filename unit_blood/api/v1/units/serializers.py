@@ -79,6 +79,7 @@ class UnitDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unit
         fields = (
+            "id",
             "type",
             "blood_type",
             "expired_at",

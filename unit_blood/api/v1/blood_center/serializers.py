@@ -51,7 +51,17 @@ class CenterCapacityDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterCapacity
         fields = (
+            "id",
             "type",
+            "min_qty",
+            "max_qty",
+        )
+
+
+class CenterCapacityUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CenterCapacity
+        fields = (
             "min_qty",
             "max_qty",
         )

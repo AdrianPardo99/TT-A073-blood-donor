@@ -19,6 +19,7 @@ from .serializers import (
     CenterCapacitySerializer,
     CenterCapacityDetailSerializer,
     CenterCapacityListSerializer,
+    CenterCapacityUpdateSerializer,
 )
 
 from blood_center.models import Center
@@ -120,6 +121,7 @@ class CenterCapacityViewSet(
     serializer_action_classes = {
         "list": CenterCapacityListSerializer,
         "retrieve": CenterCapacityDetailSerializer,
+        "partial_update": CenterCapacityUpdateSerializer,
     }
     lookup_url_kwarg = "capacity_pk"
 
@@ -151,6 +153,31 @@ class CenterCapacityViewSet(
         serializer = self.get_serializer(capacity)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def partial_update(self, request, center_pk, capacity_pk, *args, **kwargs):
+        center = get_object_or_404(Center, pk=center_pk)
+        capacity = get_object_or_404(center.capabilities, pk=capacity_pk)
+        serializer = self.get_serializer(
+            data=request.data, context={"capacity": capacity}
+        )
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            capacity.min_qty = validated_data.get("min_qty")
+            capacity.max_qty = validated_data.get("max_qty")
+            capacity.save()
+            output_serializer = CenterCapacityDetailSerializer(
+                capacity, context={"request": request}
+            )
+            return Response(output_serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, center_pk, capacity_pk, *args, **kwargs):
+        center = get_object_or_404(Center, pk=center_pk)
+        capacity = get_object_or_404(center.capabilities, pk=capacity_pk)
+        capacity.delete()
+        return Response(
+            {"msg": "Capacity successfully delted"}, status=status.HTTP_200_OK
+        )
+
 
 center_capacity_list = CenterCapacityViewSet.as_view(
     {
@@ -161,5 +188,7 @@ center_capacity_list = CenterCapacityViewSet.as_view(
 center_capacity_retrieve = CenterCapacityViewSet.as_view(
     {
         "get": "retrieve",
+        "put": "partial_update",
+        "delete": "delete",
     }
 )
