@@ -167,7 +167,6 @@ class _UnitModalState extends State<UnitModal> {
               setState(
                 () {
                   transferible = !transferible;
-                  print(transferible);
                 },
               );
             },
@@ -186,7 +185,6 @@ class _UnitModalState extends State<UnitModal> {
               setState(
                 () {
                   altruista = !altruista;
-                  print(altruista);
                 },
               );
             },

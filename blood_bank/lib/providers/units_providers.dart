@@ -13,7 +13,6 @@ class UnitsProvider extends ChangeNotifier {
     final centerId = LocalStorage.prefs.getInt("center_id");
     final resp = await UnitBloodApi.httpGet("/centers/$centerId/units/");
     final units = UnitsResponse.fromMap(resp);
-    print(units);
     this.units = [...units.units];
     notifyListeners();
   }
