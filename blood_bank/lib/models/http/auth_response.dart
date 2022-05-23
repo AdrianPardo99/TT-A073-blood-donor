@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:blood_bank/models/http/center_response.dart';
+
 class AuthResponse {
   AuthResponse({
     required this.token,
@@ -54,49 +56,5 @@ class User {
         "first_name": firstName,
         "last_name": lastName,
         "center": center.toMap(),
-      };
-}
-
-class Center {
-  Center({
-    required this.id,
-    required this.name,
-    required this.address,
-    required this.city,
-    required this.type,
-    required this.latitude,
-    required this.longitude,
-  });
-
-  int id;
-  String name;
-  String address;
-  String city;
-  String type;
-  String latitude;
-  String longitude;
-
-  factory Center.fromJson(String str) => Center.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory Center.fromMap(Map<String, dynamic> json) => Center(
-        id: json["id"],
-        name: json["name"],
-        address: json["address"],
-        city: json["city"],
-        type: json["type"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "address": address,
-        "city": city,
-        "type": type,
-        "latitude": latitude,
-        "longitude": longitude,
       };
 }

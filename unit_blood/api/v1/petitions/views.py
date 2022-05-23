@@ -99,7 +99,8 @@ class PetitionViewSet(
         if not trans_status:
             trans_status = transfer.status
         return Response(
-            {"message": msg, trans_status: change}, status=status.HTTP_200_OK
+            {"message": msg, trans_status: change, "current_status": trans_status},
+            status=status.HTTP_200_OK,
         )
 
 

@@ -425,7 +425,7 @@ class CenterTransferUnit(BaseModel):
         )
         db_table = "center_transfer_unit"
 
-    def reserve_uni(self):
+    def reserve_unit(self):
         unit = self.unit
         unit.is_available = False
         unit.save()

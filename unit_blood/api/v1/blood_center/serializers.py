@@ -117,6 +117,7 @@ class CenterDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Center
         fields = (
+            "id",
             "name",
             "address",
             "city",

@@ -1,3 +1,5 @@
+import 'package:blood_bank/providers/transfers_provider.dart';
+import 'package:blood_bank/ui/shared/custom_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -33,6 +35,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(lazy: false, create: (_) => SideMenuProvider()),
         ChangeNotifierProvider(create: (_) => CapabilitiesProvider()),
         ChangeNotifierProvider(create: (_) => UnitsProvider()),
+        ChangeNotifierProvider(create: (_) => TransfersProvider()),
       ],
       child: const MyApp(),
     );
@@ -45,6 +48,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: CustomScroll(),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

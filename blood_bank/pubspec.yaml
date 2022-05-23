@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.2
   select_form_field: ^2.2.0
   shared_preferences: ^2.0.15
+  timezone: ^0.8.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

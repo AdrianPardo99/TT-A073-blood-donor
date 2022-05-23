@@ -22,6 +22,7 @@ class CenterTransferUnitListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterTransferUnit
         fields = [
+            "id",
             "unit",
         ]
 
@@ -32,6 +33,7 @@ class CenterTransferUnitDetailListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterTransferUnit
         fields = [
+            "id",
             "unit",
         ]
 
@@ -167,18 +169,19 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                     comment=comment,
                     receptor_blood_type=receptor_blood_type,
                     unit_type=unit_type,
-                    qty=qty,
+                    qty=other_center.get("qty"),
                     origin=other_center.get("center"),
                     destination=center,
                 )
                 transfer.save()
                 # print("Agrega unidades")
                 for unit_id in other_center.get("id"):
-                    unit = transfer.origin.units.filter(pk=unit_id)
+                    unit = Unit.objects.filter(pk=unit_id)
                     if unit.exists():
                         transfer_unit = CenterTransferUnit(
                             transfer=transfer, unit=unit.first()
                         )
+                        transfer_unit.reserve_unit()
                         transfer_unit.save()
                 transfers.append(transfer)
             # print("Retorna unidades")
@@ -199,6 +202,7 @@ class CenterTransferDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterTransfer
         fields = [
+            "id",
             "origin",
             "destination",
             "status",

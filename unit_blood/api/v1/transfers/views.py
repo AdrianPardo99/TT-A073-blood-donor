@@ -58,8 +58,6 @@ class CenterTransferViewSet(
     def list(self, request, center_pk, *args, **kwargs):
         center = get_object_or_404(Center, pk=center_pk)
         transfers = CenterTransfer.objects.filter(destination=center)
-        if not transfers.exists():
-            get_object_or_404(CenterTransfer, pk=0)
         serializer = self.get_serializer(
             transfers,
             many=True,
@@ -100,7 +98,8 @@ class CenterTransferViewSet(
         if not trans_status:
             trans_status = transfer.status
         return Response(
-            {"message": msg, trans_status: change}, status=status.HTTP_200_OK
+            {"message": msg, trans_status: change, "current_status": trans_status},
+            status=status.HTTP_200_OK,
         )
 
 
