@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     "dj_database_url",
     "corsheaders",
     "simple_history",
+    "dbbackup",
+    "records",
 ]
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
