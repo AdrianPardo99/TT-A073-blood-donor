@@ -29,13 +29,13 @@ class Center(BaseModel):
     city = models.CharField(pgettext_lazy("Center field", "city"), max_length=100)
     latitude = models.DecimalField(
         pgettext_lazy("Center field", "latitude"),
-        max_digits=18,
-        decimal_places=16,
+        max_digits=21,
+        decimal_places=18,
     )
     longitude = models.DecimalField(
         pgettext_lazy("Center field", "longitude"),
-        max_digits=18,
-        decimal_places=16,
+        max_digits=21,
+        decimal_places=18,
     )
     type = models.CharField(
         pgettext_lazy("Center field", "type"),
