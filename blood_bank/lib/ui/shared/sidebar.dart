@@ -49,7 +49,7 @@ class Sidebar extends StatelessWidget {
           CustomMenuItem(
             isActive:
                 sideMenuProvider.currentPage == Flurorouter.transfersRoute,
-            text: "Transferencias",
+            text: "Solicitudes",
             icon: Icons.send_outlined,
             onPressed: () => navigateTo(Flurorouter.transfersRoute),
           ),

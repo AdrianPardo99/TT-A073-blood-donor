@@ -68,7 +68,7 @@ class _TransfersViewState extends State<TransfersView> {
               ],
               source: TransfersDataTableSource(transfers.transfers, context, 0),
               header: Text(
-                "Transferencias hechas en el centro ${auth.user?.center.name}",
+                "Solicitudes de Transferencia realizadas para el centro ${auth.user?.center.name}",
                 maxLines: 2,
               ),
               actions: [

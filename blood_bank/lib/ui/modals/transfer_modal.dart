@@ -119,7 +119,7 @@ class _TransferCreateModalState extends State<TransferCreateModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Crear transferencia",
+                "Solicitud de transferencia",
                 style: CustomLabels.h1.copyWith(color: Colors.white),
               ),
               IconButton(
