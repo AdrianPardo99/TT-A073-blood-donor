@@ -135,4 +135,26 @@ class TransfersProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future cancelTransfer(int type, int transferId) async {
+    final centerId = LocalStorage.prefs.getInt("center_id");
+    final url = (type == 0) ? "transfers" : "petitions";
+    try {
+      final json = await UnitBloodApi.httpDelete(
+          "/centers/$centerId/$url/$transferId/", {});
+      if (json["cancelled"] == false) {
+        NotificationService.showSnackbarError(
+            "Error al cancelar la transferencia ${(type == 0) ? "realizada" : "recibida"}");
+        return;
+      }
+      NotificationService.showSnackbar("Transferencia cancelada");
+      if (type == 1) {
+        this.petitions.removeWhere((c) => c.id == transferId);
+      }
+      notifyListeners();
+    } catch (e) {
+      NotificationService.showSnackbarError(
+          "Error al cancelar la transferencia ${(type == 0) ? "realizada" : "recibida"}");
+    }
+  }
 }

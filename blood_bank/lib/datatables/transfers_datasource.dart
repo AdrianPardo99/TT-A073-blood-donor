@@ -127,7 +127,32 @@ class TransfersDataTableSource extends DataTableSource {
                 ),
               if (can_cancel.contains(transfer.status))
                 IconButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    final dialog = AlertDialog(
+                      title:
+                          Text("¿Estás seguro de cancelar la transferencia?"),
+                      content: Text(
+                          "¿Cancelar ${(typeTable == 0) ? "solicitud de transferencia" : "petición recibida"} #${transfer.id}?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("No"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // await Provider.of<CapabilitiesProvider>(context,
+                            //         listen: false)
+                            //     .deleteCapacity(capacity.id);
+                            await prov.cancelTransfer(typeTable, transfer.id);
+
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Sí, cancelar"),
+                        ),
+                      ],
+                    );
+                    showDialog(context: context, builder: (_) => dialog);
+                  },
                   icon: Icon(Icons.cancel_outlined),
                 ),
             ],
