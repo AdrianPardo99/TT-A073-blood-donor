@@ -28,7 +28,9 @@ def information_about():
 
 @app.post("/", response_model=list[UnitBlood])
 def get_solution(petition: Petition):
+    print("Recibe datos")
     units = knapsack(
         petition.max_weight, petition.units, int(os.environ.get("MAX_ITERATION"))
     )
+    print(units)
     return units

@@ -6,7 +6,6 @@ import 'package:blood_bank/services/notification_service.dart';
 import 'package:blood_bank/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 
-
 class TransfersProvider extends ChangeNotifier {
   List<Transfer> transfers = [];
   List<Transfer> petitions = [];
@@ -122,15 +121,18 @@ class TransfersProvider extends ChangeNotifier {
       if ((json as List).length == 0) {
         NotificationService.showSnackbarError(
             "Error no se puede crear esta transferencia, te recomendamos solicitar donaciones en tu centro para contar con esta y otras unidades de sangre");
-        return;
+        return true;
       }
       for (int i = 0; i < (json as List).length; i++) {
         final newTransfer = Transfer.fromMap(json[i]);
         this.transfers.add(newTransfer);
       }
+      notifyListeners();
+      return true;
     } catch (e) {
       NotificationService.showSnackbarError(
           "Error al crear las transferencias");
+      return false;
     }
   }
 }

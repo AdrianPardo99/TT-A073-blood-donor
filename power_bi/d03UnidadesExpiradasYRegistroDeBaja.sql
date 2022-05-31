@@ -25,3 +25,6 @@ LEFT JOIN public.user ON public.user.id=rfe.history_user_id
 WHERE
     is_expired
     AND unit.deleted_at is null
+    AND {{center}}
+    AND {{city}}
+ORDER BY center_id

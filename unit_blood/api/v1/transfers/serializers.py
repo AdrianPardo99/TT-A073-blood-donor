@@ -72,20 +72,20 @@ class CenterTransferSerializer(serializers.ModelSerializer):
         erythrocyte = ErythrocyteClient()
 
         # Check platelets microservice for distance
-        # print("Entra a obtener centros distintos")
+        print("Entra a obtener centros distintos")
         for external in center.obtain_distinct_centers():
             if platelets.check_information(
                 center, external, int(validated_data.get("type_deadline"))
             ):
-                # print("Entro en platelets")
+                print("Entro en platelets")
                 # Check if has units for transfer
                 if external.units.filter(
                     type=unit_type, is_available=True, is_expired=False
                 ).exists():
 
                     centers.append(external)
-        # print("Crea centros")
-        # print(len(centers))
+        print("Crea centros")
+        print(len(centers))
         if len(centers) > 0:
             array_centers = create_array_random(len(centers))
             # print("Crea arreglo")
@@ -105,9 +105,9 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                         array_centers[i] = 0
             # print("Limpia centros")
             array_units = create_array_from_random(array_centers, qty)
-            # print("Creo unidades")
+            print("Creo unidades")
             # Next create a payload for plasma API
-            # print("Agrega utilidades")
+            print("Agrega utilidades")
             for i in range(len(array_units)):
                 if array_units[i] != 0:
                     unit = UnitPlasmaListSerializer(
@@ -128,17 +128,21 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                     final_unit.append([])
 
             # Here we need to create payload for erythrocyte API
-            # print("Obtiene respuestas")
+            print("Obtiene respuestas")
             for i in range(len(final_unit)):
+                print(i)
                 if len(final_unit[i]) > 0:
+                    print(len(final_unit[i]))
                     units = UnitErythrocyteListSerializer(
                         final_unit[i],
                         many=True,
                     )
+                    print("Envia respuesta")
                     resp = erythrocyte.check_information(
                         array_units[i],
                         units,
                     )
+                    print("Recibe")
                     transfer_units_subarr = []
                     for unit_tra in resp:
                         transfer_units_subarr.append(unit_tra.get("id"))
@@ -149,7 +153,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                             "id": transfer_units_subarr,
                         }
                     )
-
+            print("Obtuvo")
             # Crear aqui las distintas transferencias, y listo
             # Para iterar para cada transferencia, se crea,
             #  --  Origen de quien recibira la notificación
@@ -159,7 +163,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
             # se toma transfer, se accede a otro_centro del arreglo de transfer_unit (Al hacer save() no esta disponible la unidad...)
             # Se itera sobre cada id para ver que ahi pertenecen y hacer transferencia de unidad
             # Se retorna solo transfer
-            # print("Crea transferencias")
+            print("Crea transferencias")
             transfer = CenterTransfer()
             for other_center in transfer_units:
                 transfer = CenterTransfer(
@@ -174,7 +178,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                     destination=center,
                 )
                 transfer.save()
-                # print("Agrega unidades")
+                print("Agrega unidades")
                 for unit_id in other_center.get("id"):
                     unit = Unit.objects.filter(pk=unit_id)
                     if unit.exists():
@@ -184,7 +188,7 @@ class CenterTransferSerializer(serializers.ModelSerializer):
                         transfer_unit.reserve_unit()
                         transfer_unit.save()
                 transfers.append(transfer)
-            # print("Retorna unidades")
+            print("Retorna unidades")
         return transfers
 
 

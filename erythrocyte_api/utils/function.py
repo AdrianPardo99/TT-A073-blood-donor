@@ -19,10 +19,22 @@ def check_fitness(donors, solution):
     return sum
 
 
-def gen_random_solution(donors):
+def gen_random_solution(donors, max_weight):
     arr = []
     for i in range(len(donors)):
-        arr.append(randint(0, 1))
+        if max_weight == 1 and (donors[i].profit == 1 or donors[i].profit == 2):
+            arr.append(1)
+            max_weight -= 1
+        else:
+            arr.append(0)
+        if max_weight != 1:
+            if max_weight > 0:
+                arr.append(randint(0, 1))
+            else:
+                arr.append(0)
+            if arr[-1] == 1:
+                max_weight -= 1
+
     return arr
 
 
@@ -38,11 +50,13 @@ def copy_sol(arr):
 
 
 def knapsack(max_weight, donors, max_iterations):
+    print("Inicia busqueda")
     while True:
-        solution = gen_random_solution(donors)
+        solution = gen_random_solution(donors, max_weight)
         fitness = check_fitness(donors, solution)
         if check_weight(donors, max_weight, solution):
             break
+    print("Encontro solución")
     for i in range(max_iterations):
         mutate = get_random_string(len(donors))
         new_solution = copy_sol(solution)

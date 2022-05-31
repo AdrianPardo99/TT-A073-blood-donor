@@ -223,13 +223,16 @@ class _TransferCreateModalState extends State<TransferCreateModal> {
                   flag = false;
                 }
                 if (flag) {
-                  await Provider.of<TransfersProvider>(context, listen: false)
+                  final value = await Provider.of<TransfersProvider>(context,
+                          listen: false)
                       .newTransfer(qty, name, comment, receptor, unidad,
                           typeDeadline, deadline);
-                  //Navigator.of(context).pop();
+                  if (value) {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
-              text: "Guardar",
+              text: "Solicitar",
               color: Colors.white,
             ),
           ),

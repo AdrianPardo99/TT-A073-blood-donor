@@ -16,17 +16,20 @@ WITH movimientos_de_sangre AS(
     WHERE 
         unit.deleted_at is null
         AND {{center}}
+        AND {{city}}
     ORDER BY unit_history.id , unit_history.history_date
 ), ultimos_movimientos AS (
     SELECT 
-        DISTINCT ON(id)id,
-        FIRST_VALUE(history_change_reason)OVER(PARTITION BY id ORDER BY history_date desc) as history_change_reason,
-        FIRST_VALUE(unit_type)OVER(PARTITION BY id ORDER BY history_date desc) as unit_type,
-        FIRST_VALUE(blood_type)OVER(PARTITION BY id ORDER BY history_date desc) as blood_type,
-        FIRST_VALUE(center_name)OVER(PARTITION BY id ORDER BY history_date desc) as center_name
+        DISTINCT ON(movimientos_de_sangre.id)movimientos_de_sangre.id,
+        FIRST_VALUE(movimientos_de_sangre.history_change_reason)OVER(PARTITION BY movimientos_de_sangre.id ORDER BY history_date desc) as history_change_reason,
+        FIRST_VALUE(movimientos_de_sangre.unit_type)OVER(PARTITION BY movimientos_de_sangre.id ORDER BY history_date desc) as unit_type,
+        FIRST_VALUE(movimientos_de_sangre.blood_type)OVER(PARTITION BY movimientos_de_sangre.id ORDER BY history_date desc) as blood_type,
+        FIRST_VALUE(movimientos_de_sangre.center_name)OVER(PARTITION BY movimientos_de_sangre.id ORDER BY history_date desc) as center_name
     FROM movimientos_de_sangre 
+    JOIN unit ON unit.id=movimientos_de_sangre.id
     WHERE 
-        1=1
+        {{unit_type}}
+        AND {{blood_type}}
         [[ AND (history_date)::timestamp::date BETWEEN {{start_date}} AND {{end_date}} ]]
 )
 

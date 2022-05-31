@@ -9,18 +9,28 @@ WITH cantidad_de_unidades_disponibles AS (
         deleted_at is null
     GROUP BY center_id,type
 )
-
-SELECT
-    center.id as center_id,
-    center.name as center_name,
-    cdud.type as type_unit,
-    cdud.qty_units,
-    cc.min_qty,
-    cc.max_qty
-FROM center
-LEFT JOIN cantidad_de_unidades_disponibles cdud ON cdud.center_id=center.id
-LEFT JOIN center_capacity cc ON cc.center_id=center.id AND cc.type=cdud.type
-WHERE
-    cc.deleted_at is null
-    AND cc.min_qty>=cdud.qty_units
-    AND {{center}}
+SELECT*FROM(
+    SELECT
+        center.id as center_id,
+        center.name as center_name,
+        cc.type as blood_unit_type,
+        COALESCE((
+            SELECT
+                qty_units
+            FROM cantidad_de_unidades_disponibles cdud
+            WHERE
+                cdud.center_id=center.id
+                AND cdud.type=cc.type
+        ),0) as qty_units,
+        cc.min_qty,
+        cc.max_qty
+    FROM center
+    LEFT JOIN center_capacity cc ON cc.center_id=center.id 
+    WHERE
+        cc.deleted_at is null
+        AND {{center}}
+        AND {{city}}
+    ORDER BY center_id
+)a
+WHERE 
+    a.qty_units<=a.min_qty

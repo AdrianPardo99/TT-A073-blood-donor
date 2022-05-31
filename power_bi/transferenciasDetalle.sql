@@ -9,4 +9,5 @@ LEFT JOIN center ON center.id=center_transfer.origin_id
 WHERE
     center_transfer.deleted_at is null
     AND {{center}}
+    AND {{city}}
 GROUP BY center_name

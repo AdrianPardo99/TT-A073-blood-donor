@@ -9,12 +9,15 @@ SELECT
     public.user.email as changed_by
     
 FROM unit_history
-LEFT JOIN unit ON unit.id=unit_history.id
+JOIN unit ON unit.id=unit_history.id
 LEFT JOIN center ON center.id=unit_history.center_id
 LEFT JOIN public.user ON public.user.id=unit_history.history_user_id
 WHERE 
     unit.deleted_at is null
     AND {{center}}
+    AND {{city}}
+    AND {{blood_type}}
+    AND {{unit_id}}
     [[ AND (unit_history.history_date at time zone 'America/Mexico_City')::timestamp::date between {{start_date}} AND {{end_date}} ]]
 ORDER BY unit_history.id , unit_history.history_date
     
