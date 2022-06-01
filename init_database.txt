@@ -1,0 +1,163 @@
+centers = [
+    {
+        "name": "Centro Nacional de Transfusión Sanguínea",
+        "address": "Othon De Mendizabal, Arroyo Zacatenco 195, Gustavo A. Madero, 07360 Ciudad de México, CDMX",
+        "city": "CDMX",
+        "latitude": 19.507600240355504,
+        "longitude": -99.14378979821596,
+        "type": "cnts",
+    },
+    {
+        "name": "Banco Central de Sangre IMSS",
+        "address": "Paseo de las Jacarandas & Seris, La Raza, Azcapotzalco, 02990 Ciudad de México, CDMX",
+        "city": "CDMX",
+        "latitude": 19.464840838960747,
+        "longitude": -99.14569695886142,
+        "type": "imss",
+    },
+    {
+        "name": "Cruz Roja Mexicana",
+        "address": "Av. Ejército Nacional Mexicano 1032, Polanco, Polanco I Secc, Miguel Hidalgo, 11510 Ciudad de México, CDMX",
+        "city": "CDMX",
+        "latitude": 19.437796616053088,
+        "longitude": -99.20894471349192,
+        "type": "cruz_roja",
+    },
+    {
+        "name": "Sanatorio Santa Cruz",
+        "address": "Lerma 401, Sector Popular, 50040 Toluca de Lerdo, Méx.",
+        "city": "Estado de México",
+        "latitude": 19.294022935568833,
+        "longitude": -99.66998179257264,
+        "type": "privados",
+    },
+    {
+        "name": "Hospital General Dra. Columba Rivera Osorio",
+        "address": "Carretera México-pachuca km 86.5, Issste, 42080 Pachuca de Soto, Hgo.",
+        "city": "Hidalgo",
+        "latitude": 20.073454233607027,
+        "longitude": -98.77694741534411,
+        "type": "issste",
+    },
+    {
+        "name": "IMSS General Regional Hospital No.1 Dr. Carlos Mac Gregor Sanchez Navarro",
+        "address": "C. Gabriel Mancera 222, Col del Valle Nte, Benito Juárez, 03103 Ciudad de México, CDMX",
+        "city": "CDMX",
+        "latitude": 19.395452326263484,
+        "longitude": -99.161472971219,
+        "type": "imss",
+    },
+    {
+        "name": "Clinica Hospital Guanajuato",
+        "address": "Cerro del Hormiguero S/N, Maria de la Luz, 36000 Guanajuato, Gto.",
+        "city": "Guanajuato",
+        "latitude": 21.004784715827494,
+        "longitude": -101.25344392701936,
+        "type": "issste",
+    },
+    {
+        "name": "General Hospital of Mexico Dr. Eduardo Liceaga",
+        "address": "Dr. Balmis 148, Doctores, Cuauhtémoc, 06720 Ciudad de México, CDMX",
+        "city": "CDMX",
+        "latitude": 19.413195708077094,
+        "longitude": -99.1519802026513,
+        "type": "ccinshae",
+    },
+    {
+        "name": "General Hospital Dr. Juan Ramon de la Fuente",
+        "address": "Reforma Aeronáutica 3018, Reforma Política, Iztapalapa, 09730 Iztapalapa, CDMX",
+        "city": "CDMX",
+        "latitude": 19.343464724757105,
+        "longitude": -99.02737125767207,
+        "type": "ccinshae",
+    },
+    {
+        "name": "IMSS Hospital General Regional No. 1 Querétaro",
+        "address": "Av. 5 de Febrero 102, IMSS, 76000 Santiago de Querétaro, Qro.",
+        "city": "Querétaro",
+        "latitude": 20.582652211521232,
+        "longitude": -100.40519529629559,
+        "type": "imss",
+    },
+]
+
+
+users = [
+    {
+        "email": "gozapaadr@gmail.com",
+        "first_name": "Adrian",
+        "last_name": "González",
+        "is_staff": True,
+    },
+    {
+        "email": "agonzalez@fithub.com.co",
+        "first_name": "Adrian",
+        "last_name": "Pardo",
+        "is_staff": True,
+    },
+    {
+        "email": "center_3@mail.com",
+        "first_name": "Usuario",
+        "last_name": "3",
+        "is_staff": False,
+    },
+    {
+        "email": "center_4@mail.com",
+        "first_name": "Usuario",
+        "last_name": "4",
+        "is_staff": False,
+    },
+    {
+        "email": "center_5@mail.com",
+        "first_name": "Usuario",
+        "last_name": "5",
+        "is_staff": False,
+    },
+    {
+        "email": "center_6@mail.com",
+        "first_name": "Usuario",
+        "last_name": "6",
+        "is_staff": False,
+    },
+    {
+        "email": "center_7@mail.com",
+        "first_name": "Usuario",
+        "last_name": "7",
+        "is_staff": False,
+    },
+    {
+        "email": "center_8@mail.com",
+        "first_name": "Usuario",
+        "last_name": "8",
+        "is_staff": False,
+    },
+    {
+        "email": "center_9@mail.com",
+        "first_name": "Usuario",
+        "last_name": "9",
+        "is_staff": False,
+    },
+    {
+        "email": "center_10@mail.com",
+        "first_name": "Usuario",
+        "last_name": "10",
+        "is_staff": False,
+    },
+]
+
+capacities = ["ST", "CE", "CP", "PF", "PDFL", "CRIO"]
+
+from blood_center.models import Center, CenterCapacity
+from application_user.models import User
+
+
+for i in range(len(centers)):
+    center = Center.objects.create(**centers[i])
+    for j in capacities:
+        capacity = CenterCapacity(type=j, center=center, min_qty=0, max_qty=130)
+        capacity.save()
+    usr = users[i]
+    usr["center"] = center
+    usr = User.objects.create(**usr)
+    usr.set_password("adrian")
+    usr.save()

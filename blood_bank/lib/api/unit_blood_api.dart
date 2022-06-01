@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
 
 import 'package:blood_bank/services/local_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UnitBloodApi {
   static final Dio _dio = Dio();
 
   /* Configure dio HTTP client */
-  static void configureDio() {
+  static void configureDio() async {
+    await dotenv.load();
+    final api_url = "https://4bad8edc9f9e.ngrok.io";
     /* Base url */
-    _dio.options.baseUrl = "http://192.168.100.12:8085/api/v1";
+    _dio.options.baseUrl = "${api_url}/api/v1";
     /* Configure headers */
     _dio.options.headers = {
       "Authorization": "Bearer ${LocalStorage.prefs.getString('token') ?? ''}"
