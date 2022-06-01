@@ -166,28 +166,29 @@ class CenterTransferSerializer(serializers.ModelSerializer):
             print("Crea transferencias")
             transfer = CenterTransfer()
             for other_center in transfer_units:
-                transfer = CenterTransfer(
-                    deadline=deadline,
-                    type_deadline=type_deadline,
-                    name=name,
-                    comment=comment,
-                    receptor_blood_type=receptor_blood_type,
-                    unit_type=unit_type,
-                    qty=other_center.get("qty"),
-                    origin=other_center.get("center"),
-                    destination=center,
-                )
-                transfer.save()
-                print("Agrega unidades")
-                for unit_id in other_center.get("id"):
-                    unit = Unit.objects.filter(pk=unit_id)
-                    if unit.exists():
-                        transfer_unit = CenterTransferUnit(
-                            transfer=transfer, unit=unit.first()
-                        )
-                        transfer_unit.reserve_unit()
-                        transfer_unit.save()
-                transfers.append(transfer)
+                if len(other_center.get("id")) > 0:
+                    transfer = CenterTransfer(
+                        deadline=deadline,
+                        type_deadline=type_deadline,
+                        name=name,
+                        comment=comment,
+                        receptor_blood_type=receptor_blood_type,
+                        unit_type=unit_type,
+                        qty=other_center.get("qty"),
+                        origin=other_center.get("center"),
+                        destination=center,
+                    )
+                    transfer.save()
+                    print("Agrega unidades")
+                    for unit_id in other_center.get("id"):
+                        unit = Unit.objects.filter(pk=unit_id)
+                        if unit.exists():
+                            transfer_unit = CenterTransferUnit(
+                                transfer=transfer, unit=unit.first()
+                            )
+                            transfer_unit.reserve_unit()
+                            transfer_unit.save()
+                    transfers.append(transfer)
             print("Retorna unidades")
         return transfers
 

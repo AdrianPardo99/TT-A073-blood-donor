@@ -31,7 +31,7 @@ class TransferModal extends StatelessWidget {
       padding: EdgeInsets.all(20),
       height: size.height,
       decoration: buildBoxDecoration(),
-      child: Column(
+      child: ListView(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

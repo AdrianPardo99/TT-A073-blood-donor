@@ -108,6 +108,7 @@ class TransfersDataTableSource extends DataTableSource {
                   showModalBottomSheet(
                     backgroundColor: Colors.transparent,
                     context: context,
+                    isScrollControlled: true,
                     builder: (context) => TransferModal(
                       transfer: prov.transferDetail,
                       status: (status[transfer.status]!["name"] as String),
