@@ -27,4 +27,7 @@ WHERE
     AND unit.deleted_at is null
     AND {{center}}
     AND {{city}}
+    AND {{unit_type}}
+    AND {{blood_type}}
+    AND {{unit_id}}
 ORDER BY center_id

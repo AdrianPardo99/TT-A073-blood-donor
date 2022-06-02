@@ -8,6 +8,9 @@ WHERE
     AND unit.is_expired
     AND {{center}}
     AND {{city}}
+    AND {{unit_type}}
+    AND {{blood_type}}
+    [[ AND (unit.created_at at time zone 'America/Mexico_City')::timestamp::date BETWEEN {{start_date}} AND {{end_date}} ]]
 GROUP BY type_unit
 UNION
 SELECT
@@ -21,6 +24,9 @@ WHERE
     AND NOT unit.can_transfer
     AND {{center}}
     AND {{city}}
+    AND {{unit_type}}
+    AND {{blood_type}}
+    [[ AND (unit.created_at at time zone 'America/Mexico_City')::timestamp::date BETWEEN {{start_date}} AND {{end_date}} ]]
 GROUP BY type_unit
 UNION
 SELECT
@@ -34,4 +40,7 @@ WHERE
     AND unit.can_transfer
     AND {{center}}
     AND {{city}}
+    AND {{unit_type}}
+    AND {{blood_type}}
+    [[ AND (unit.created_at at time zone 'America/Mexico_City')::timestamp::date BETWEEN {{start_date}} AND {{end_date}} ]]
 GROUP BY type_unit

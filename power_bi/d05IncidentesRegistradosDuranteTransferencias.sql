@@ -11,3 +11,6 @@ LEFT JOIN center ON center.id=unit.center_id
 WHERE 
     {{center}}
     AND {{city}}
+    AND {{blood_type}}
+    AND {{unit_id}}
+    AND {{unit_type}}

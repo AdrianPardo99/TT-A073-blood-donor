@@ -68,6 +68,15 @@ def knapsack(max_weight, donors, max_iterations):
         head = new_solution[mutate]
         new_solution[mutate] = new_solution[mutate_1]
         new_solution[mutate_1] = head
+        head = new_solution[mutate]
+        new_solution[mutate] = new_solution[mutate_1]
+        new_solution[mutate_1] = head
+        head = new_solution[mutate]
+        new_solution[mutate] = new_solution[mutate_1]
+        new_solution[mutate_1] = head
+        head = new_solution[mutate]
+        new_solution[mutate] = new_solution[mutate_1]
+        new_solution[mutate_1] = head
         new_fitness = check_fitness(donors, new_solution)
         if check_weight(donors, max_weight, new_solution) and new_fitness > fitness:
             fitness = new_fitness

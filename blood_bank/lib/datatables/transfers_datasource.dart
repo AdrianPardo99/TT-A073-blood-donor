@@ -145,6 +145,7 @@ class TransfersDataTableSource extends DataTableSource {
                             //         listen: false)
                             //     .deleteCapacity(capacity.id);
                             await prov.cancelTransfer(typeTable, transfer.id);
+                            notifyListeners();
 
                             Navigator.of(context).pop();
                           },
