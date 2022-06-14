@@ -35,3 +35,8 @@ If you have one or many databases, you only need to run the next command for res
 
 When you want to backup the database, you only need to run:
 `docker-compose exec unit_blood pg_dumpall -c -h db -U postgres> latest.dump`
+
+
+# Final release
+
+The first version belongs to Instituto Politécnico Nacinal (IPN), while the idea and development belogs to Adrian Gonzalez, so he demands that deployment or use of his idea be attached in the credits and not be monetized.
